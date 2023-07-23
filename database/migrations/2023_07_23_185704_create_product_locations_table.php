@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('product_locations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->unsignedBigInteger('warehouse_id');
+            $table->string('aisle')->nullable();
+            $table->string('shelf')->nullable();
+            $table->string('bin')->nullable();
             $table->timestamps();
 
             $table->foreign('warehouse_id')->references('id')->on('warehouses');
