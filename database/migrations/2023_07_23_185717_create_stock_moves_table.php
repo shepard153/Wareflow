@@ -17,7 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('from_location_id');
             $table->unsignedBigInteger('to_location_id');
             $table->integer('quantity');
+            $table->string('reference')->nullable();
             $table->text('reason')->nullable();
+            $table->enum('status', ['draft', 'pending', 'completed', 'canceled'])->default('draft');
             $table->date('move_date');
             $table->timestamps();
 

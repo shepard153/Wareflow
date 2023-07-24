@@ -11,7 +11,11 @@ class InventoryAdjustment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id', 'location_id', 'new_quantity', 'adjustment_reason', 'adjustment_date',
+        'product_id',
+        'location_id',
+        'new_quantity',
+        'adjustment_reason',
+        'adjustment_date'
     ];
 
     /**

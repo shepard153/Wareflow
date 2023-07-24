@@ -11,7 +11,9 @@ class Warehouse extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'location', 'manager_id',
+        'name',
+        'location',
+        'manager_id'
     ];
 
     /**
