@@ -36,6 +36,9 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
+        ],
+        [
+            'breadcrumbs' => $request->route()->breadcrumbs()->jsonSerialize()
         ]);
     }
 }
