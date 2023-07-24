@@ -7,22 +7,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class StockMove extends Model
+class Shipment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'product_id',
-        'from_location_id',
-        'to_location_id',
-        'movement_type',
+        'contact_id',
+        'warehouse_id',
+        'shipment_type',
         'quantity',
-        'reason',
-        'move_date',
+        'description',
+        'tracking_number',
+        'shipment_date',
     ];
 
     protected $casts = [
-        'movement_type' => ShipmentType::class,
+        'shipment_type' => ShipmentType::class,
     ];
 
     /**
@@ -36,16 +37,16 @@ class StockMove extends Model
     /**
      * @return BelongsTo
      */
-    public function fromLocation(): BelongsTo
+    public function contact(): BelongsTo
     {
-        return $this->belongsTo(ProductLocation::class, 'from_location_id');
+        return $this->belongsTo(Contact::class);
     }
 
     /**
      * @return BelongsTo
      */
-    public function toLocation(): BelongsTo
+    public function warehouse(): BelongsTo
     {
-        return $this->belongsTo(ProductLocation::class, 'to_location_id');
+        return $this->belongsTo(Warehouse::class);
     }
 }

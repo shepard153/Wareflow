@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('from_location_id');
             $table->unsignedBigInteger('to_location_id');
             $table->integer('quantity');
+            $table->text('reason')->nullable();
             $table->date('move_date');
             $table->timestamps();
 
@@ -24,7 +25,6 @@ return new class extends Migration
             $table->foreign('from_location_id')->references('id')->on('product_locations');
             $table->foreign('to_location_id')->references('id')->on('product_locations');
         });
-
     }
 
     /**
