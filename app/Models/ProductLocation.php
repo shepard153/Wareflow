@@ -11,7 +11,10 @@ class ProductLocation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'warehouse_id', 'aisle', 'shelf', 'bin',
+        'warehouse_id',
+        'aisle',
+        'shelf',
+        'bin'
     ];
 
     /**

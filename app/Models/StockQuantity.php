@@ -11,7 +11,9 @@ class StockQuantity extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id', 'location_id', 'quantity',
+        'product_id',
+        'location_id',
+        'quantity'
     ];
 
     /**

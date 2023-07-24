@@ -16,11 +16,19 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('contact_id');
             $table->unsignedBigInteger('warehouse_id');
-            $table->enum('shipment_type', ['incoming', 'outgoing', 'warehouse_transfer']);
+
             $table->integer('quantity');
             $table->text('description')->nullable();
+            $table->string('reference')->nullable();
             $table->string('tracking_number')->nullable();
-            $table->date('shipment_date');
+
+            $table->enum('shipment_type', ['incoming', 'outgoing', 'warehouse_transfer']);
+            $table->enum('status', [
+                'created', 'pending', 'on_hold', 'in_transit', 'delivered', 'canceled'
+            ])->default('created');
+
+            $table->date('scheduled_date')->nullable();
+            $table->date('shipment_date')->nullable();
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');

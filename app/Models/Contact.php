@@ -23,7 +23,6 @@ class Contact extends Model
         'contact_type' => ContactType::class,
     ];
 
-
     /**
      * @return HasMany
      */

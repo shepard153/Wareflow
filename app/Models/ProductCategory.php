@@ -12,7 +12,8 @@ class ProductCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'parent_id',
+        'name',
+        'parent_id',
     ];
 
     /**
