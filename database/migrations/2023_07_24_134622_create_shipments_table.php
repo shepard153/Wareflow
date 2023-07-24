@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_moves', function (Blueprint $table) {
+        Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('from_location_id');
-            $table->unsignedBigInteger('to_location_id');
-            $table->enum('movement_type', ['in', 'local', 'outgoing']);
+            $table->unsignedBigInteger('sender_id');
+            $table->unsignedBigInteger('warehouse_id');
             $table->integer('quantity');
-            $table->text('reason')->nullable();
-            $table->date('move_date');
+            $table->date('arrival_date');
+            $table->string('sender_name');
+            $table->string('sender_address')->nullable();
+            $table->string('tracking_number')->nullable();
             $table->timestamps();
 
+            $table->foreign('sender_id')->references('id')->on('senders');
             $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('from_location_id')->references('id')->on('product_locations');
-            $table->foreign('to_location_id')->references('id')->on('product_locations');
+            $table->foreign('warehouse_id')->references('id')->on('warehouses');
         });
-
     }
 
     /**
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_moves');
+        Schema::dropIfExists('shipments');
     }
 };
