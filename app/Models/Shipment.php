@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ShipmentType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,20 @@ class Shipment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'quantity', 'shipment_date', 'sender_id'];
+    protected $fillable = [
+        'product_id',
+        'contact_id',
+        'warehouse_id',
+        'shipment_type',
+        'quantity',
+        'description',
+        'tracking_number',
+        'shipment_date',
+    ];
+
+    protected $casts = [
+        'shipment_type' => ShipmentType::class,
+    ];
 
     /**
      * @return BelongsTo
@@ -23,9 +37,9 @@ class Shipment extends Model
     /**
      * @return BelongsTo
      */
-    public function sender(): BelongsTo
+    public function contact(): BelongsTo
     {
-        return $this->belongsTo(Sender::class);
+        return $this->belongsTo(Contact::class);
     }
 
     /**

@@ -14,17 +14,17 @@ return new class extends Migration
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('sender_id');
+            $table->unsignedBigInteger('contact_id');
             $table->unsignedBigInteger('warehouse_id');
+            $table->enum('shipment_type', ['incoming', 'outgoing', 'warehouse_transfer']);
             $table->integer('quantity');
-            $table->date('arrival_date');
-            $table->string('sender_name');
-            $table->string('sender_address')->nullable();
+            $table->text('description')->nullable();
             $table->string('tracking_number')->nullable();
+            $table->date('shipment_date');
             $table->timestamps();
 
-            $table->foreign('sender_id')->references('id')->on('senders');
             $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('contact_id')->references('id')->on('contacts');
             $table->foreign('warehouse_id')->references('id')->on('warehouses');
         });
     }
