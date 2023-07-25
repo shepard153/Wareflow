@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ShipmentStatus;
+use App\Enums\ShipmentType;
 use App\Enums\StockMoveStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,8 +30,8 @@ class Shipment extends Model
     ];
 
     protected $casts = [
-        'shipment_type' => StockMoveStatus::class,
-        'status'        => StockMoveStatus::class,
+        'shipment_type' => ShipmentType::class,
+        'status'        => ShipmentStatus::class,
     ];
 
     /**
