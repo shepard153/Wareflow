@@ -8,10 +8,6 @@ import DropdownLink from '@/Components/Navigation/DropdownLink.vue';
 import NavLink from '@/Components/Navigation/NavLink.vue';
 import ResponsiveNavLink from '@/Components/Navigation/ResponsiveNavLink.vue';
 
-onMounted(() => {
-  isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
-});
-
 defineProps({
   title: String
 });
@@ -19,7 +15,7 @@ defineProps({
 const page = usePage()
 const breadcrumbs = computed(() => page.props.breadcrumbs)
 const showingNavigationDropdown = ref(false);
-const isDarkMode = ref(false);
+const isDarkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches);
 
 const switchToTeam = (team) => {
   router.put(route('current-team.update'), {
