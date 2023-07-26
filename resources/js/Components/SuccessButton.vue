@@ -12,6 +12,7 @@ defineProps({
     type: String,
     default: 'button'
   },
+  class: {}
 });
 
 const classes = computed(() => {

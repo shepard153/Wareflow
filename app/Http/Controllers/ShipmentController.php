@@ -29,7 +29,7 @@ class ShipmentController extends Controller
         // Validate the form data
         $validatedData = $request->validate([
             'product_id' => 'required|exists:products,id',
-            'recipient_id' => 'required|exists:contacts,id',
+            'contact_id' => 'required|exists:contacts,id',
             'warehouse_id' => 'required|exists:warehouses,id',
             'quantity' => 'required|integer|min:1',
             'shipment_date' => 'required|date',

@@ -21,6 +21,7 @@
     "vue": "^3.2.31"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^5.4.0",
     "laravel-vue-i18n": "^2.6.1"
   }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {Head, Link, router, usePage} from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
@@ -8,6 +8,10 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
+onMounted(() => {
+  isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+});
+
 defineProps({
   title: String
 });
@@ -15,6 +19,7 @@ defineProps({
 const page = usePage()
 const breadcrumbs = computed(() => page.props.breadcrumbs)
 const showingNavigationDropdown = ref(false);
+const isDarkMode = ref(false);
 
 const switchToTeam = (team) => {
   router.put(route('current-team.update'), {
@@ -323,7 +328,7 @@ const logout = () => {
 
       <!-- Page Content -->
       <main>
-        <slot/>
+        <slot :isDarkMode="isDarkMode"/>
       </main>
     </div>
   </div>
