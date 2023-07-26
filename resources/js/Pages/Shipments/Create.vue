@@ -2,10 +2,10 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm } from '@inertiajs/vue3';
 import Form from '@/Components/Form.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import SuccessButton from '@/Components/SuccessButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/FormFields/InputError.vue';
+import InputLabel from '@/Components/FormFields/InputLabel.vue';
+import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+import TextInput from '@/Components/FormFields/TextInput.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 
 defineProps({

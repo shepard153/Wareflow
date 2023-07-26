@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import SuccessButton from '@/Components/SuccessButton.vue';
+import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 </script>
 
 <template>
