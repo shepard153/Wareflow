@@ -1,10 +1,30 @@
 <script setup>
+import { ref } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+import ConfirmationModal from "@/Components/Modals/ConfirmationModal.vue";
+import DangerButton from "@/Components/Buttons/DangerButton.vue";
+import SecondaryButton from "@/Components/Buttons/SecondaryButton.vue";
 
 defineProps({
   productCategories: Object
-})
+});
+
+const confirmationModalShow = ref(false);
+const deleteCategoryId = ref(null);
+
+const deleteProductCategory = (categoryId) => {
+  confirmationModalShow.value = true;
+  deleteCategoryId.value = categoryId;
+}
+
+const deleteConfirmed = () => {
+  confirmationModalShow.value = false;
+
+  router.delete(route('product_categories.delete', {'id': deleteCategoryId.value}))
+}
+
 </script>
 
 <template>
@@ -16,12 +36,54 @@ defineProps({
         </SuccessButton>
       </div>
     </div>
-    <div class="py-12">
-      <table>
-        <tr v-for="productCategory in productCategories">
-          <td>{{ productCategory.name }}</td>
-        </tr>
-      </table>
+    <div class="flex flex-col max-w-3xl justify-center space-y-8 mx-auto py-12">
+      <div class="flex flex-col">
+        <div class="py-2 px-3 font-semibold border-y">
+          {{ $t('Category name') }}
+        </div>
+
+        <div class="flex justify-between items-center py-2 px-3 bg-zinc-200/90 dark:bg-zinc-800/50" v-for="productCategory in productCategories">
+          <span class="hover:text-emerald-400 cursor-pointer">
+            <Link :href="route('product_categories.show', productCategory.id)">
+              {{ productCategory.name }}
+            </Link>
+          </span>
+
+          <div class="flex space-x-2">
+            <button class="w-fit px-3 py-1 text-white hover:text-white hover:no-underline bg-indigo-600 hover:bg-indigo-500 rounded-md">
+              {{ $t('Edit') }}
+            </button>
+
+            <button class="w-fit px-3 py-1 text-white hover:text-white hover:no-underline bg-red-500 hover:bg-red-600 rounded-md"
+                    @click="deleteProductCategory(productCategory.id)"
+            >
+              {{ $t('Delete') }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <ConfirmationModal :show="confirmationModalShow" @close="confirmationModalShow = false">
+      <template #title>
+        {{ $t('Deletion warning!') }}
+      </template>
+
+      <template #content>
+        {{ $t("You're about to delete Product Category. Are you sure you want to delete it?") }}
+      </template>
+
+      <template #footer>
+        <form @submit.prevent="deleteConfirmed" class="space-x-2">
+          <SecondaryButton @click="confirmationModalShow = false">
+            {{ $t('Abort') }}
+          </SecondaryButton>
+
+          <DangerButton :type="'submit'">
+            {{ $t('Confirm delete') }}
+          </DangerButton>
+        </form>
+      </template>
+    </ConfirmationModal>
   </AppLayout>
 </template>

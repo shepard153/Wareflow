@@ -24,4 +24,12 @@ class ProductCategoryController extends Controller
             'productCategories' => $productCategories
         ]);
     }
+
+    /**
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        $this->productCategoryService->delete($id);
+    }
 }

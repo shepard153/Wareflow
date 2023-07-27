@@ -20,4 +20,11 @@ interface ProductCategoryServiceInterface
      * @return Collection
      */
     public function getProductCategories(): Collection;
+
+    /**
+     * @param int $id
+     *
+     * @return void
+     */
+    public function delete(int $id): void;
 }

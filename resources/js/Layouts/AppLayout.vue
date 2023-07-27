@@ -28,9 +28,7 @@ const isDarkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches
           <span v-for="(page, index) in breadcrumbs"
                 :key="page.title"
                 class="text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <Link :href="page.url"
-               :class="{ 'font-semibold': page.is_current_page }"
-            >
+            <Link :href="page.url" :class="{ 'font-semibold': page.is_current_page }">
               {{ page.title }}
             </Link>
 
@@ -42,7 +40,7 @@ const isDarkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches
       </header>
 
       <!-- Page Content -->
-      <main>
+      <main class="text-gray-800 dark:text-gray-200">
         <slot :isDarkMode="isDarkMode"/>
       </main>
     </div>

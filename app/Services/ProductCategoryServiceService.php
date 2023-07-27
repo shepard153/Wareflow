@@ -27,4 +27,14 @@ class ProductCategoryServiceService implements ProductCategoryServiceInterface
     {
         return ProductCategory::all();
     }
+
+    /**
+     * @param int $id
+     *
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        ProductCategory::where(['id' => $id])->delete();
+    }
 }
