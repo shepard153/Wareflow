@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\ShipmentStatus;
+use App\Enums\ShipmentType;
 use App\Enums\StockMoveStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
@@ -28,8 +31,8 @@ class Shipment extends Model
     ];
 
     protected $casts = [
-        'shipment_type' => StockMoveStatus::class,
-        'status'        => StockMoveStatus::class,
+        'shipment_type' => ShipmentType::class,
+        'status'        => ShipmentStatus::class,
     ];
 
     /**
@@ -70,5 +73,13 @@ class Shipment extends Model
     public function lastStatus(): MorphOne
     {
         return $this->morphOne(StatusHistory::class, 'statusable')->latestOfMany();
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function shipmentItems(): HasMany
+    {
+        return $this->hasMany(ShipmentItem::class);
     }
 }

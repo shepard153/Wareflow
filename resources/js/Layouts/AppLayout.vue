@@ -1,12 +1,12 @@
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {Head, Link, router, usePage} from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import DropdownLink from '@/Components/Navigation/DropdownLink.vue';
+import NavLink from '@/Components/Navigation/NavLink.vue';
+import ResponsiveNavLink from '@/Components/Navigation/ResponsiveNavLink.vue';
 
 defineProps({
   title: String
@@ -15,6 +15,7 @@ defineProps({
 const page = usePage()
 const breadcrumbs = computed(() => page.props.breadcrumbs)
 const showingNavigationDropdown = ref(false);
+const isDarkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches);
 
 const switchToTeam = (team) => {
   router.put(route('current-team.update'), {
@@ -51,7 +52,10 @@ const logout = () => {
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                  Dashboard
+                  {{ $t('Dashboard') }}
+                </NavLink>
+                <NavLink :href="route('shipments')" :active="route().current('shipments')">
+                  {{ $t('Shipments') }}
                 </NavLink>
               </div>
             </div>
@@ -61,19 +65,19 @@ const logout = () => {
                 <!-- Teams Dropdown -->
                 <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
                   <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button type="button"
-                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.current_team.name }}
+                    <span class="inline-flex rounded-md">
+                      <button type="button"
+                              class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+                        {{ $page.props.auth.user.current_team.name }}
 
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                                     stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                          d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/>
-                                                </svg>
-                                            </button>
-                                        </span>
+                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/>
+                        </svg>
+                      </button>
+                    </span>
                   </template>
 
                   <template #content>
@@ -135,18 +139,18 @@ const logout = () => {
                     </button>
 
                     <span v-else class="inline-flex rounded-md">
-                                            <button type="button"
-                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.name }}
+                      <button type="button"
+                              class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+                        {{ $page.props.auth.user.name }}
 
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                                     stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-                                                </svg>
-                                            </button>
-                                        </span>
+                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                      </button>
+                    </span>
                   </template>
 
                   <template #content>
@@ -299,26 +303,28 @@ const logout = () => {
         </div>
       </nav>
 
-      <!-- Page Heading -->
+      <!-- Page Heading/Breadcrumbs -->
       <header class="bg-white dark:bg-gray-800 shadow">
-        <div v-if="breadcrumbs" class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <div v-for="page in breadcrumbs" :key="page.title">
-            <div class="text-xl text-gray-800 dark:text-gray-200 leading-tight">
-              <span v-if="page ==='/'">/</span>
-              <a
-                  v-else
-                  :href="page.url"
-                  :class="{ 'font-semibold': page.is_current_page }"
-              >{{ page.title }}</a>
-            </div>
-          </div>
-        </div>
+        <div v-if="breadcrumbs" class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <span v-for="(page, index) in breadcrumbs"
+                :key="page.title"
+                class="text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <Link :href="page.url"
+               :class="{ 'font-semibold': page.is_current_page }"
+            >
+              {{ page.title }}
+            </Link>
 
+            <span v-if="breadcrumbs[index + 1]">
+              /
+            </span>
+          </span>
+        </div>
       </header>
 
       <!-- Page Content -->
       <main>
-        <slot/>
+        <slot :isDarkMode="isDarkMode"/>
       </main>
     </div>
   </div>

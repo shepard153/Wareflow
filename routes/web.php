@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ShipmentController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,4 +30,8 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard')->breadcrumb('Dashboard');;
+
+    Route::get('/shipments', [ShipmentController::class, 'index'])->name('shipments')->breadcrumb('Shipments');
+    Route::get('/shipments/create', [ShipmentController::class, 'create'])->name('shipments.create')->breadcrumb('Create', 'shipments');
+
 });

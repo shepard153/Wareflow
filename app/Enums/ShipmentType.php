@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum ShipmentType
 {
-    const Incoming = 'in';
+    const Incoming = 'incoming';
     const Outgoing = 'outgoing';
     const WarehouseTransfer = 'warehouse_transfer';
 }
