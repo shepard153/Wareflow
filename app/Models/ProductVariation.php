@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class StockQuantity extends Model
+class ProductVariation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'product_id',
-        'product_variation_id',
-        'location_id',
-        'quantity',
+        'sku',
     ];
 
     /**
@@ -26,18 +25,10 @@ class StockQuantity extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @return BelongsToMany
      */
-    public function productVariation(): BelongsTo
+    public function attributes(): BelongsToMany
     {
-        return $this->belongsTo(ProductVariation::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(ProductLocation::class, 'location_id');
+        return $this->belongsToMany(ProductAttribute::class, 'attribute_product_variation', 'product_variation_id', 'attribute_id');
     }
 }

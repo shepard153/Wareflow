@@ -9,7 +9,7 @@ import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import TextInput from '@/Components/FormFields/TextInput.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import FieldsGroup from "@/Components/FormFields/FieldsGroup.vue";
-import Modal from "@/Components/Modals/Modal.vue";
+import DialogModal from "@/Components/Modals/DialogModal.vue";
 
 defineProps({ errors: Object });
 
@@ -71,13 +71,19 @@ const createShipment = () => {
 
       <template #buttons>
         <SuccessButton type="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          Create
+          {{ $t('Create') }}
         </SuccessButton>
       </template>
     </Form>
 
-    <Modal :show="showNewProductModal" :closeable="true" @close="showNewProductModal = false">
-      Test
-    </Modal>
+    <DialogModal :show="showNewProductModal" :closeable="true" @close="showNewProductModal = false">
+      <template #title>
+        {{ $t('Add new product') }}
+      </template>
+
+      <template #content>
+        gggh
+      </template>
+    </DialogModal>
   </AppLayout>
 </template>

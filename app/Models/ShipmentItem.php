@@ -5,32 +5,37 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class StockQuantity extends Model
+class ShipmentItem extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'product_variation_id',
+        'shipment_id',
+        'item_id',
+        'item_type',
         'location_id',
         'quantity',
+        'batch_number',
+        'barcode',
+        'expiry_date',
     ];
 
     /**
      * @return BelongsTo
      */
-    public function product(): BelongsTo
+    public function shipment(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Shipment::class);
     }
 
     /**
-     * @return BelongsTo
+     * @return MorphTo
      */
-    public function productVariation(): BelongsTo
+    public function item(): MorphTo
     {
-        return $this->belongsTo(ProductVariation::class);
+        return $this->morphTo();
     }
 
     /**
