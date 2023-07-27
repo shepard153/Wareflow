@@ -23,7 +23,7 @@ Route::get('/', function () {
         'canRegister' => true,
         'canResetPassword' => true
     ]);
-});
+})->name('home');
 
 Route::middleware([
     'auth:sanctum',
