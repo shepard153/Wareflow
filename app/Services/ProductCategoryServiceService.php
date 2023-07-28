@@ -29,6 +29,19 @@ class ProductCategoryServiceService implements ProductCategoryServiceInterface
     }
 
     /**
+     * @param array $data
+     *
+     * @return void
+     */
+    public function create(array $data): void
+    {
+        ProductCategory::create([
+            'name'      => $data['name'],
+            'parent_id' => $data['parent_id'],
+        ]);
+    }
+
+    /**
      * @param int $id
      *
      * @return void

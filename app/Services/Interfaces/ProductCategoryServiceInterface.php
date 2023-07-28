@@ -22,6 +22,13 @@ interface ProductCategoryServiceInterface
     public function getProductCategories(): Collection;
 
     /**
+     * @param array $data
+     *
+     * @return void
+     */
+    public function create(array $data): void;
+
+    /**
      * @param int $id
      *
      * @return void

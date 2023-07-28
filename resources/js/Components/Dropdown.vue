@@ -2,6 +2,7 @@
 import {computed, onMounted, onUnmounted, ref} from 'vue';
 
 const props = defineProps({
+  active: Boolean,
   dropdownClasses: String,
   align: {
     type: String,
@@ -45,10 +46,15 @@ const alignmentClasses = computed(() => {
 
   return 'origin-top';
 });
+
+const activeClasses = computed(() => {
+  return props.active ? 'font-medium text-gray-900 dark:text-gray-100 border-b-2 border-indigo-400 dark:border-indigo-600'
+      : 'border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-700';
+});
 </script>
 
 <template>
-  <div class="relative" :class="dropdownClasses">
+  <div class="relative" :class="[dropdownClasses, activeClasses]">
     <div @click="open = ! open">
       <slot name="trigger"/>
     </div>
