@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductCategoryRequest;
 use App\Services\Interfaces\ProductCategoryServiceInterface;
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -26,18 +29,54 @@ class ProductCategoryController extends Controller
         ]);
     }
 
-    public function store(ProductCategoryRequest $request)
+    /**
+     * @param ProductCategoryRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function store(ProductCategoryRequest $request): RedirectResponse
     {
-       $this->productCategoryService->create($request->all());
+        try {
+            $this->productCategoryService->create($request->all());
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', __('Product category successfully added.'));
+
+    }
+
+    /**
+     * @param ProductCategoryRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update(ProductCategoryRequest $request): RedirectResponse
+    {
+        $this->productCategoryService->update($request->all());
+
+        return back()->with('message', __('Product category successfully added.'));
+
     }
 
     /**
      * @param int $id
      *
-     * @return void
+     * @return RedirectResponse
      */
-    public function delete(int $id): void
+    public function delete(int $id): RedirectResponse
     {
-        $this->productCategoryService->delete($id);
+        try {
+            $this->productCategoryService->delete($id);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', __('Product category successfully deleted.'));
     }
 }

@@ -32,9 +32,8 @@ const form = useForm({
 const create = () => {
   form.post(route('product_categories.store'), {
     preserveScroll: true,
+    onSuccess: () => emit('close')
   });
-
-  emit('close');
 };
 </script>
 

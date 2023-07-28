@@ -45,7 +45,10 @@ const deleteConfirmed = () => {
           {{ $t('Category name') }}
         </div>
 
-        <div class="flex justify-between items-center py-2 px-3 bg-zinc-200/90 dark:bg-zinc-800/50" v-for="productCategory in productCategories">
+        <div class="flex justify-between items-center py-2 px-3 bg-zinc-200/90 dark:bg-zinc-800/50"
+             v-for="productCategory in productCategories"
+             :key="productCategory.id"
+        >
           <span class="hover:text-emerald-400 cursor-pointer">
             <Link :href="route('product_categories.show', productCategory.id)">
               {{ productCategory.name }}
