@@ -3,8 +3,15 @@ import {computed, ref, watch} from 'vue';
 import {usePage} from '@inertiajs/vue3';
 
 const show = ref(true);
-const style = computed(() => usePage().props.jetstream.flash?.bannerStyle || 'success');
-const message = computed(() => usePage().props.jetstream.flash?.banner || usePage().props.flash.success || '');
+const style = computed(() => {
+  if (usePage().props.flash.error) {
+    return 'danger';
+  } else {
+    return usePage().props.jetstream.flash?.bannerStyle || 'success';
+  }
+});
+
+const message = computed(() => usePage().props.jetstream.flash?.banner || usePage().props.flash.success ||  usePage().props.flash.error || '');
 // ToDo: Move custom flash messages to separate component
 
 watch(message, async () => {

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\ProductCategory;
 use App\Services\Interfaces\ProductCategoryServiceInterface;
+use Exception;
 use Illuminate\Support\Collection;
 
 class ProductCategoryService implements ProductCategoryServiceInterface
@@ -79,9 +80,16 @@ class ProductCategoryService implements ProductCategoryServiceInterface
      * @param int $id
      *
      * @return void
+     * @throws Exception
      */
     public function delete(int $id): void
     {
+        $productCategory = ProductCategory::where(['id' => $id])->first();
+
+        if ($productCategory->children()->count() > 0) {
+            throw new Exception(__('Cannot delete category with child elements. Please delete child elements first.'));
+        }
+
         ProductCategory::where(['id' => $id])->delete();
     }
 }

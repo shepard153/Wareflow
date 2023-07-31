@@ -57,8 +57,14 @@ class ProductCategoryController extends Controller
      */
     public function update(ProductCategoryRequest $request): RedirectResponse
     {
-        $this->productCategoryService->update($request->all());
+        try {
+            $this->productCategoryService->update($request->all());
 
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return back()->with('error', $e->getMessage());
+        }
         return back()->with('message', __('Product category successfully updated.'));
 
     }
