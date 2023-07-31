@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ProductCategoryLevelsLimit;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,13 +20,13 @@ class ProductCategoryRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:4|unique:product_categories,name',
-            'parent_id' => 'sometimes|required_if:is_subcategory,true'
+            'name'      => 'required|string|min:4|unique:product_categories,name',
+            'parent_id' => ['sometimes', 'required_if:is_subcategory,true', new ProductCategoryLevelsLimit()]
         ];
     }
 }

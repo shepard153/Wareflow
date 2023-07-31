@@ -8,7 +8,7 @@ use App\Models\ProductCategory;
 use App\Services\Interfaces\ProductCategoryServiceInterface;
 use Illuminate\Support\Collection;
 
-class ProductCategoryServiceService implements ProductCategoryServiceInterface
+class ProductCategoryService implements ProductCategoryServiceInterface
 {
     /**
      * @param int $id
@@ -17,7 +17,7 @@ class ProductCategoryServiceService implements ProductCategoryServiceInterface
      */
     public function getProductCategory(int $id): ProductCategory
     {
-        return ProductCategory::find($id)->first();
+        return ProductCategory::find($id);
     }
 
     /**

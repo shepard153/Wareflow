@@ -10,7 +10,6 @@ import SecondaryButton from "@/Components/Buttons/SecondaryButton.vue";
 import DialogModal from "@/Components/Modals/DialogModal.vue";
 import ProductCategoryForm from './ProductCategories/ProductCategoryForm.vue';
 import ProductCategoryTree from "@/Pages/ProductCategories/ProductCategoryTree.vue";
-import productCategoryStore from "@/stores/product-category-store.js";
 
 defineProps({
   productCategories: Object,

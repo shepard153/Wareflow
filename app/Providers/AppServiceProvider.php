@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Interfaces\ProductCategoryServiceInterface;
-use App\Services\ProductCategoryServiceService;
+use App\Services\ProductCategoryService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      * @var array
      */
     public array $singletons = [
-        ProductCategoryServiceInterface::class => ProductCategoryServiceService::class
+        ProductCategoryServiceInterface::class => ProductCategoryService::class
     ];
 
     /**
