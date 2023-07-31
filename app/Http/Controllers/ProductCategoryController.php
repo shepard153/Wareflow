@@ -23,9 +23,11 @@ class ProductCategoryController extends Controller
     public function index(): Response
     {
         $productCategories = $this->productCategoryService->getProductCategories();
+        $productCategoryTree = $this->productCategoryService->getProductCategoryTree();
 
         return Inertia::render('ProductCategories', [
-            'productCategories' => $productCategories
+            'productCategories' => $productCategories,
+            'productCategoryTree' => $productCategoryTree
         ]);
     }
 
@@ -46,7 +48,6 @@ class ProductCategoryController extends Controller
         }
 
         return back()->with('success', __('Product category successfully added.'));
-
     }
 
     /**
@@ -58,7 +59,7 @@ class ProductCategoryController extends Controller
     {
         $this->productCategoryService->update($request->all());
 
-        return back()->with('message', __('Product category successfully added.'));
+        return back()->with('message', __('Product category successfully updated.'));
 
     }
 

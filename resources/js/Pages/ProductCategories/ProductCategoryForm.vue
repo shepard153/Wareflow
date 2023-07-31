@@ -11,6 +11,7 @@ import Select from '@/Components/FormFields/Select.vue';
 
 defineProps({
   categories: Object,
+
   errors: Object
 });
 

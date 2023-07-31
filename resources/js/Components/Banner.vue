@@ -5,6 +5,7 @@ import {usePage} from '@inertiajs/vue3';
 const show = ref(true);
 const style = computed(() => usePage().props.jetstream.flash?.bannerStyle || 'success');
 const message = computed(() => usePage().props.jetstream.flash?.banner || usePage().props.flash.success || '');
+// ToDo: Move custom flash messages to separate component
 
 watch(message, async () => {
   show.value = true;

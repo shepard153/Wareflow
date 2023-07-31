@@ -1,6 +1,7 @@
 import './bootstrap';
 import '../css/app.css';
 import '@vuepic/vue-datepicker/dist/main.css';
+import store from '@/stores.js';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -24,6 +25,7 @@ createInertiaApp({
                     return await langs[`../../lang/${lang}.json`]();
                 }
             })
+            .use(store)
             .mount(el);
     },
     progress: {

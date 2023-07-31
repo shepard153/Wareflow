@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import { useStore } from 'vuex';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import ConfirmationModal from "@/Components/Modals/ConfirmationModal.vue";
@@ -8,26 +8,39 @@ import DangerButton from "@/Components/Buttons/DangerButton.vue";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton.vue";
 import DialogModal from "@/Components/Modals/DialogModal.vue";
 import ProductCategoryForm from './ProductCategories/ProductCategoryForm.vue';
+import ProductCategoryTree from "@/Pages/ProductCategories/ProductCategoryTree.vue";
+import {router} from "@inertiajs/vue3";
 
 defineProps({
-  productCategories: Object
+  productCategories: Object,
+  productCategoryTree: Object
 });
 
-const confirmationModalShow = ref(false);
-const dialogModalShow = ref(false);
-const deleteCategory = ref(null);
+const store = useStore();
 
-const deleteProductCategory = (category) => {
-  confirmationModalShow.value = true;
-  deleteCategory.value = category;
+const dialogModalShow = ref(false);
+
+const showProductCategory = () => {
+  dialogModalShow.value = true;
 }
+
+const confirmationModalShow = (state) => {
+  if (state === false) {
+    store.commit('toggleConfirmationModal', false);
+  } else {
+    return store.state.confirmationModalShow;
+  }
+};
+
+const deleteProductCategory = () => {
+  return store.state.deleteProductCategory;
+};
 
 const deleteConfirmed = () => {
-  confirmationModalShow.value = false;
+  store.commit('toggleConfirmationModal', false);
 
-  router.delete(route('product_categories.delete', { 'id': deleteCategory.value.id }));
+  router.delete(route('product_categories.delete', { 'id': deleteProductCategory().deleteProductCategory.id }));
 }
-
 </script>
 
 <template>
@@ -45,28 +58,7 @@ const deleteConfirmed = () => {
           {{ $t('Category name') }}
         </div>
 
-        <div class="flex justify-between items-center py-2 px-3 bg-zinc-200/90 dark:bg-zinc-800/50"
-             v-for="productCategory in productCategories"
-             :key="productCategory.id"
-        >
-          <span class="hover:text-emerald-400 cursor-pointer">
-            <Link :href="route('product_categories.show', productCategory.id)">
-              {{ productCategory.name }}
-            </Link>
-          </span>
-
-          <div class="flex space-x-2">
-            <button class="w-fit px-3 py-1 text-white hover:text-white hover:no-underline bg-indigo-600 hover:bg-indigo-500 rounded-md">
-              {{ $t('Edit') }}
-            </button>
-
-            <button class="w-fit px-3 py-1 text-white hover:text-white hover:no-underline bg-red-500 hover:bg-red-600 rounded-md"
-                    @click="deleteProductCategory(productCategory)"
-            >
-              {{ $t('Delete') }}
-            </button>
-          </div>
-        </div>
+        <ProductCategoryTree :productCategories="productCategoryTree"/>
       </div>
     </div>
 
@@ -80,18 +72,18 @@ const deleteConfirmed = () => {
       </template>
     </DialogModal>
 
-    <ConfirmationModal :show="confirmationModalShow" @close="confirmationModalShow = false">
+    <ConfirmationModal :show="confirmationModalShow(true)" @close="confirmationModalShow(false)">
       <template #title>
         {{ $t('Deletion warning!') }}
       </template>
 
       <template #content>
-        {{ $t("You're about to delete :categoryName category. Are you sure you want to delete it?", { 'categoryName': deleteCategory.name }) }}
+        {{ $t("You're about to delete :categoryName category. Are you sure you want to delete it?", { 'categoryName': deleteProductCategory().deleteProductCategory.name }) }}
       </template>
 
       <template #footer>
         <form @submit.prevent="deleteConfirmed" class="space-x-2">
-          <SecondaryButton @click="confirmationModalShow = false">
+          <SecondaryButton @click="confirmationModalShow(false)">
             {{ $t('Abort') }}
           </SecondaryButton>
 
