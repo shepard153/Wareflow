@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import { useStore } from 'vuex';
 import ProductCategoryTree from './ProductCategoryTree.vue';
@@ -8,12 +7,10 @@ defineProps({
   category: Object,
 });
 
-const confirmationModalShow = ref(false);
-
 const store = useStore();
 
 const deleteProductCategory = (category) => {
-  store.dispatch('deleteProductCategory', { deleteProductCategory: category });
+  store.dispatch('deleteProductCategory', { category });
 }
 </script>
 
@@ -29,7 +26,7 @@ const deleteProductCategory = (category) => {
       <div class="flex space-x-2">
         <button
             class="w-fit px-3 py-1 text-white hover:text-white hover:no-underline bg-indigo-600 hover:bg-indigo-500 rounded-md"
-            @click="showProductCategory(child.id)">
+            @click="editProductCategory(child.id)">
           {{ $t('Edit') }}
         </button>
 

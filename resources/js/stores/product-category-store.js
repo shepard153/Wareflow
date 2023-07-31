@@ -1,7 +1,7 @@
 const productCategoryStore = {
     state() {
         return {
-            productCategory: {},
+            deleteProductCategory: {},
             confirmationModalShow: false,
         };
     },
@@ -16,7 +16,7 @@ const productCategoryStore = {
     },
     mutations: {
         updateDeleteProductCategory(state, payload) {
-            state.productCategory = payload;
+            state.deleteProductCategory = payload;
         },
         toggleConfirmationModal(state, payload) {
             state.confirmationModalShow = payload;

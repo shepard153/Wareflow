@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { router } from "@inertiajs/vue3";
 import { useStore } from 'vuex';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
@@ -9,7 +10,7 @@ import SecondaryButton from "@/Components/Buttons/SecondaryButton.vue";
 import DialogModal from "@/Components/Modals/DialogModal.vue";
 import ProductCategoryForm from './ProductCategories/ProductCategoryForm.vue';
 import ProductCategoryTree from "@/Pages/ProductCategories/ProductCategoryTree.vue";
-import {router} from "@inertiajs/vue3";
+import productCategoryStore from "@/stores/product-category-store.js";
 
 defineProps({
   productCategories: Object,
@@ -28,18 +29,18 @@ const confirmationModalShow = (state) => {
   if (state === false) {
     store.commit('toggleConfirmationModal', false);
   } else {
-    return store.state.confirmationModalShow;
+    return store.state.productCategoryStore.confirmationModalShow;
   }
 };
 
 const deleteProductCategory = () => {
-  return store.state.deleteProductCategory;
+  return store.state.productCategoryStore.deleteProductCategory.category;
 };
 
 const deleteConfirmed = () => {
   store.commit('toggleConfirmationModal', false);
 
-  router.delete(route('product_categories.delete', { 'id': deleteProductCategory().deleteProductCategory.id }));
+  router.delete(route('product_categories.delete', { 'id': deleteProductCategory().id }));
 }
 </script>
 
@@ -78,7 +79,7 @@ const deleteConfirmed = () => {
       </template>
 
       <template #content>
-        {{ $t("You're about to delete :categoryName category. Are you sure you want to delete it?", { 'categoryName': deleteProductCategory().deleteProductCategory.name }) }}
+        {{ $t("You're about to delete :categoryName category. Are you sure you want to delete it?", { 'categoryName': deleteProductCategory().name }) }}
       </template>
 
       <template #footer>
