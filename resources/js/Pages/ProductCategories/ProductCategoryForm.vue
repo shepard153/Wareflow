@@ -15,16 +15,16 @@ const props = defineProps({
   errors: Object
 });
 
-const { selectedCategory } = toRefs(props);
+toRefs(props);
+
+const filteredCategories = computed(() => {
+  if (props.selectedCategory) {
+    return props.categories.filter(category => category.id !== props.selectedCategory.id);
+  }
+  return props.categories;
+});
 
 const emit = defineEmits(['close']);
-
-const submitDisabled = computed(() => {
-  return form.processing
-      || form.name == null
-      || form.name.length < 4
-      || (form.is_subcategory && form.parent_id == null);
-});
 
 const form = useForm({
   name: null,
@@ -40,8 +40,30 @@ watchEffect(() => {
   }
 });
 
+const submitDisabled = computed(() => {
+  return form.processing
+      || form.name == null
+      || form.name.length < 4
+      || (form.is_subcategory && form.parent_id == null);
+});
+
+const action = () => {
+  if (props.selectedCategory.id) {
+    update();
+  } else {
+    create();
+  }
+};
+
 const create = () => {
   form.post(route('product_categories.store'), {
+    preserveScroll: true,
+    onSuccess: () => emit('close')
+  });
+};
+
+const update = () => {
+  form.patch(route('product_categories.update', { 'id': props.selectedCategory.id }), {
     preserveScroll: true,
     onSuccess: () => emit('close')
   });
@@ -49,7 +71,7 @@ const create = () => {
 </script>
 
 <template>
-    <Form @submitted="create" :classes="'w-full space-y-4'">
+    <Form @submitted="action" :classes="'w-full space-y-4'">
       <template v-slot:fields>
         <div class="flex flex-col w-full">
           <InputLabel for="product_id" value="Product Category name" />
@@ -64,7 +86,7 @@ const create = () => {
         </div>
 
         <div class="flex items-center space-x-2 w-full">
-          <Checkbox id="isSubcategory" v-model="form.is_subcategory" value="is_subcategory" />
+          <Checkbox id="isSubcategory" v-model="form.is_subcategory" :checked="form.is_subcategory" value="is_subcategory" />
           <InputLabel for="isSubcategory" value="Is subcategory?" />
         </div>
 
@@ -73,7 +95,7 @@ const create = () => {
           <Select
               id="parent_id"
               v-model="form.parent_id"
-              :options="categories"
+              :options="filteredCategories"
               class="block w-full mt-1"
               autofocus
           />
@@ -83,7 +105,7 @@ const create = () => {
 
       <template #buttons>
         <SuccessButton type="submit" :class="{ 'opacity-25': form.processing }" :disabled="submitDisabled">
-          {{ $t('Create') }}
+          {{ props.selectedCategory.id ? $t('Save') : $t('Create') }}
         </SuccessButton>
       </template>
     </Form>

@@ -29,11 +29,12 @@ interface ProductCategoryServiceInterface
     public function create(array $data): void;
 
     /**
+     * @param int $id
      * @param array $data
      *
      * @return void
      */
-    public function update(array $data): void;
+    public function update(int $id, array $data): void;
 
     /**
      * @param int $id

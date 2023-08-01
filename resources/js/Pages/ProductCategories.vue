@@ -28,7 +28,7 @@ const dialogModalShow = (state = null) => {
   }
 };
 
-const confirmationModalShow = (state) => {
+const confirmationModalShow = (state = null) => {
   if (state === false) {
     store.dispatch('toggleConfirmationModal', false);
   } else if (state === true) {
@@ -66,7 +66,7 @@ const deleteConfirmed = () => {
 
     <DialogModal :show="dialogModalShow()" @close="dialogModalShow(false)">
       <template #title>
-        {{ $t('Create new product category') }}
+        {{ selectedProductCategory().id ? $t('Update product category') : $t('Create new product category') }}
       </template>
 
       <template #content>

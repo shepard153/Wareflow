@@ -70,22 +70,25 @@ class ProductCategoryService implements ProductCategoryServiceInterface
      */
     public function create(array $data): void
     {
-        ProductCategory::create([
-            'name'      => $data['name'],
-            'parent_id' => $data['parent_id'],
-        ]);
+        ProductCategory::create($data);
     }
 
     /**
+     * @param int $id
      * @param array $data
      *
      * @return void
+     * @throws Exception
      */
-    public function update(array $data): void
+    public function update(int $id, array $data): void
     {
-        ProductCategory::where(['id' => $data['id']])->update([
+        if ($data['is_subcategory'] && (int) $data['parent_id'] === $id) {
+            throw new Exception(__('Cannot set parent category to itself.'));
+        }
+
+        ProductCategory::where(['id' => $id])->update([
             'name'      => $data['name'],
-            'parent_id' => $data['parent_id'],
+            'parent_id' => $data['is_subcategory'] ? $data['parent_id'] : null,
         ]);
     }
 

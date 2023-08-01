@@ -17,6 +17,10 @@ const productCategoryStore = {
             }
         },
         toggleDialogModal(context, payload) {
+            if (payload === false) {
+                context.commit('updateSelectedProductCategory', {});
+            }
+
             context.commit('updateDialogModalShow', payload);
         },
         toggleConfirmationModal(context, payload) {

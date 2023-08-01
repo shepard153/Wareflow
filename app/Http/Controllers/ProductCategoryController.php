@@ -52,13 +52,14 @@ class ProductCategoryController extends Controller
 
     /**
      * @param ProductCategoryRequest $request
+     * @param int $id
      *
      * @return RedirectResponse
      */
-    public function update(ProductCategoryRequest $request): RedirectResponse
+    public function update(ProductCategoryRequest $request, int $id): RedirectResponse
     {
         try {
-            $this->productCategoryService->update($request->all());
+            $this->productCategoryService->update($id, ($request->all()));
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
