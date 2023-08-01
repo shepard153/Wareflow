@@ -39,9 +39,11 @@ const confirmationModalShow = (state = null) => {
 };
 
 const deleteConfirmed = () => {
-  store.commit('toggleConfirmationModal', false);
+  store.dispatch('toggleConfirmationModal', false);
 
-  router.delete(route('product_categories.delete', { 'id': selectedProductCategory().id }));
+  router.delete(route('product_categories.delete', {
+    'id': selectedProductCategory().id
+  }));
 }
 </script>
 

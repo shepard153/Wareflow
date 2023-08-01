@@ -139,7 +139,7 @@ class ProductCategoryService implements ProductCategoryServiceInterface
             return false;
         }
 
-        foreach ($productCategory->children as $child) {
+        foreach ($productCategory->children() as $child) {
             if ($child->children()->count() > 0) {
                 return true;
             }
@@ -162,6 +162,6 @@ class ProductCategoryService implements ProductCategoryServiceInterface
             throw new Exception(__('Cannot delete category with child elements. Please delete child elements first.'));
         }
 
-        ProductCategory::where(['id' => $id])->delete();
+        $productCategory->delete();
     }
 }
