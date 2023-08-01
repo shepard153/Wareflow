@@ -1,24 +1,36 @@
 const productCategoryStore = {
     state() {
         return {
-            deleteProductCategory: {},
+            selectedProductCategory: {},
+            dialogModalShow: false,
             confirmationModalShow: false,
         };
     },
     actions: {
-        deleteProductCategory(context, payload) {
-            context.commit('updateDeleteProductCategory', payload);
-            context.commit('toggleConfirmationModal', true);
+        modifyProductCategory(context, payload) {
+            context.commit('updateSelectedProductCategory', payload.category);
+
+            if (payload.mode === 'edit') {
+                context.commit('updateDialogModalShow', true);
+            } else {
+                context.commit('updateConfirmationModalShow', true);
+            }
+        },
+        toggleDialogModal(context, payload) {
+            context.commit('updateDialogModalShow', payload);
         },
         toggleConfirmationModal(context, payload) {
-            context.commit('toggleConfirmationModal', payload);
+            context.commit('updateConfirmationModalShow', payload);
         }
     },
     mutations: {
-        updateDeleteProductCategory(state, payload) {
-            state.deleteProductCategory = payload;
+        updateSelectedProductCategory(state, payload) {
+            state.selectedProductCategory = payload;
         },
-        toggleConfirmationModal(state, payload) {
+        updateDialogModalShow(state, payload) {
+            state.dialogModalShow = payload;
+        },
+        updateConfirmationModalShow(state, payload) {
             state.confirmationModalShow = payload;
         }
     },

@@ -77,6 +77,19 @@ class ProductCategoryService implements ProductCategoryServiceInterface
     }
 
     /**
+     * @param array $data
+     *
+     * @return void
+     */
+    public function update(array $data): void
+    {
+        ProductCategory::where(['id' => $data['id']])->update([
+            'name'      => $data['name'],
+            'parent_id' => $data['parent_id'],
+        ]);
+    }
+
+    /**
      * @param int $id
      *
      * @return void

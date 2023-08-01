@@ -9,8 +9,8 @@ defineProps({
 
 const store = useStore();
 
-const deleteProductCategory = (category) => {
-  store.dispatch('deleteProductCategory', { category });
+const modifyProductCategory = (category, mode) => {
+  store.dispatch('modifyProductCategory', { category, mode });
 }
 </script>
 
@@ -26,13 +26,13 @@ const deleteProductCategory = (category) => {
       <div class="flex space-x-2">
         <button
             class="w-fit px-3 py-1 text-white hover:text-white hover:no-underline bg-indigo-600 hover:bg-indigo-500 rounded-md"
-            @click="editProductCategory(child.id)">
+            @click="modifyProductCategory(child, 'edit')">
           {{ $t('Edit') }}
         </button>
 
         <button
             class="w-fit px-3 py-1 text-white hover:text-white hover:no-underline bg-red-500 hover:bg-red-600 rounded-md"
-            @click="deleteProductCategory(child)"
+            @click="modifyProductCategory(child, 'delete')"
         >
           {{ $t('Delete') }}
         </button>

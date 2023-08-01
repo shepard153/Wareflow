@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, watchEffect, toRefs } from "vue";
 import { useForm } from '@inertiajs/vue3';
 import Form from '@/Components/Form.vue';
 import InputError from '@/Components/FormFields/InputError.vue';
@@ -9,11 +9,13 @@ import TextInput from '@/Components/FormFields/TextInput.vue';
 import Checkbox from '@/Components/FormFields/Checkbox.vue';
 import Select from '@/Components/FormFields/Select.vue';
 
-defineProps({
+const props = defineProps({
   categories: Object,
-
+  selectedCategory: Object,
   errors: Object
 });
+
+const { selectedCategory } = toRefs(props);
 
 const emit = defineEmits(['close']);
 
@@ -28,6 +30,14 @@ const form = useForm({
   name: null,
   is_subcategory: false,
   parent_id: null,
+});
+
+watchEffect(() => {
+  if (props.selectedCategory) {
+    form.name = props.selectedCategory.name;
+    form.is_subcategory = props.selectedCategory.parent_id != null;
+    form.parent_id = props.selectedCategory.parent_id;
+  }
 });
 
 const create = () => {

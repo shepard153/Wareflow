@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import { router } from "@inertiajs/vue3";
 import { useStore } from 'vuex';
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -17,29 +16,32 @@ defineProps({
 });
 
 const store = useStore();
+const selectedProductCategory = () => store.state.productCategoryStore.selectedProductCategory;
 
-const dialogModalShow = ref(false);
-
-const showProductCategory = () => {
-  dialogModalShow.value = true;
-}
+const dialogModalShow = (state = null) => {
+  if (state === false) {
+    store.dispatch('toggleDialogModal', false);
+  } else if (state === true) {
+    store.dispatch('toggleDialogModal', true);
+  } else {
+    return store.state.productCategoryStore.dialogModalShow;
+  }
+};
 
 const confirmationModalShow = (state) => {
   if (state === false) {
-    store.commit('toggleConfirmationModal', false);
+    store.dispatch('toggleConfirmationModal', false);
+  } else if (state === true) {
+    store.dispatch('toggleConfirmationModal', true);
   } else {
     return store.state.productCategoryStore.confirmationModalShow;
   }
 };
 
-const deleteProductCategory = () => {
-  return store.state.productCategoryStore.deleteProductCategory.category;
-};
-
 const deleteConfirmed = () => {
   store.commit('toggleConfirmationModal', false);
 
-  router.delete(route('product_categories.delete', { 'id': deleteProductCategory().id }));
+  router.delete(route('product_categories.delete', { 'id': selectedProductCategory().id }));
 }
 </script>
 
@@ -47,7 +49,7 @@ const deleteConfirmed = () => {
   <AppLayout title="Product Categories">
     <div class="bg-white dark:bg-gray-800 shadow">
       <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-        <SuccessButton @click="dialogModalShow = true">
+        <SuccessButton @click="dialogModalShow(true)">
           {{ $t('Create') }}
         </SuccessButton>
       </div>
@@ -62,23 +64,23 @@ const deleteConfirmed = () => {
       </div>
     </div>
 
-    <DialogModal :show="dialogModalShow" @close="dialogModalShow = false">
+    <DialogModal :show="dialogModalShow()" @close="dialogModalShow(false)">
       <template #title>
         {{ $t('Create new product category') }}
       </template>
 
       <template #content>
-        <ProductCategoryForm :categories="productCategories" @close="dialogModalShow = false"/>
+        <ProductCategoryForm :categories="productCategories" :selectedCategory="selectedProductCategory()" @close="dialogModalShow(false)"/>
       </template>
     </DialogModal>
 
-    <ConfirmationModal :show="confirmationModalShow(true)" @close="confirmationModalShow(false)">
+    <ConfirmationModal :show="confirmationModalShow()" @close="confirmationModalShow(false)">
       <template #title>
         {{ $t('Deletion warning!') }}
       </template>
 
       <template #content>
-        {{ $t("You're about to delete :categoryName category. Are you sure you want to delete it?", { 'categoryName': deleteProductCategory().name }) }}
+        {{ $t("You're about to delete :categoryName category. Are you sure you want to delete it?", { 'categoryName': selectedProductCategory().name }) }}
       </template>
 
       <template #footer>
