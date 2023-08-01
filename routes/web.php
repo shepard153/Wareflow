@@ -4,6 +4,7 @@ use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShipmentController;
 use App\Models\ProductAttribute;
+use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -38,7 +39,8 @@ Route::middleware([
         Route::get('/', [ProductCategoryController::class, 'index'])->name('product_categories')->breadcrumb('Product Categories');
         Route::get('/create', [ProductCategoryController::class, 'create'])->name('product_categories.create')->breadcrumb('Create', 'product_categories');
         Route::post('/store', [ProductCategoryController::class, 'store'])->name('product_categories.store');
-        Route::get('/{id}', [ProductCategoryController::class, 'show'])->name('product_categories.show')->breadcrumb('Product Category Details', 'product_categories');
+        Route::get('/{id}', [ProductCategoryController::class, 'show'])->name('product_categories.show')
+            ->breadcrumb(fn (int $id) => ProductCategory::find($id)?->getAttribute('name'), 'product_categories');
         Route::patch('/{id}', [ProductCategoryController::class, 'update'])->name('product_categories.update');
         Route::delete('/{id}', [ProductCategoryController::class, 'delete'])->name('product_categories.delete');
     });

@@ -8,7 +8,7 @@ import DangerButton from "@/Components/Buttons/DangerButton.vue";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton.vue";
 import DialogModal from "@/Components/Modals/DialogModal.vue";
 import ProductCategoryForm from './ProductCategories/ProductCategoryForm.vue';
-import ProductCategoryTree from "@/Pages/ProductCategories/ProductCategoryTree.vue";
+import ProductCategoryTree from "./ProductCategories/ProductCategoryTree.vue";
 
 defineProps({
   productCategories: Object,

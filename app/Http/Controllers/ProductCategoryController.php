@@ -31,6 +31,17 @@ class ProductCategoryController extends Controller
         ]);
     }
 
+    public function show(int $id): Response
+    {
+        $productCategory = $this->productCategoryService->getProductCategory($id);
+        $categoryProducts = $productCategory->products()->paginate(10);
+
+        return Inertia::render('ProductCategories/ProductCategoryDetails', [
+            'productCategory' => $productCategory,
+            'categoryProducts' => $categoryProducts
+        ]);
+    }
+
     /**
      * @param ProductCategoryRequest $request
      *
