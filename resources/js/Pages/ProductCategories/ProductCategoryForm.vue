@@ -18,10 +18,13 @@ const props = defineProps({
 toRefs(props);
 
 const filteredCategories = computed(() => {
-  if (props.selectedCategory) {
-    return props.categories.filter(category => category.id !== props.selectedCategory.id);
+  const categories = props.categories;
+
+  if (props.selectedCategory.id) {
+    return categories.filter(category => category.id !== props.selectedCategory.id);
   }
-  return props.categories;
+
+  return categories;
 });
 
 const emit = defineEmits(['close']);

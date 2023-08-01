@@ -82,14 +82,70 @@ class ProductCategoryService implements ProductCategoryServiceInterface
      */
     public function update(int $id, array $data): void
     {
-        if ($data['is_subcategory'] && (int) $data['parent_id'] === $id) {
-            throw new Exception(__('Cannot set parent category to itself.'));
+        if($data['is_subcategory']) {
+            $parentId = (int) $data['parent_id'];
+
+            $parentId === $id
+                ? throw new Exception(__('Cannot assign category to itself.')) : null;
+
+            $this->isParentAssignedToChild($id, $parentId)
+                ? throw new Exception(__('Cannot assign category to its child.')) : null;
+
+            if ($this->categoryChildrenHaveChildren($id)
+                || ($this->getProductCategory($id)->children()->count() >= 1
+                && $this->getProductCategory($parentId)->getAttribute('parent_id') !== null)) {
+
+                throw new Exception(__('Cannot move category as it would create too deeply nested hierarchy.'));
+            }
         }
 
         ProductCategory::where(['id' => $id])->update([
             'name'      => $data['name'],
             'parent_id' => $data['is_subcategory'] ? $data['parent_id'] : null,
         ]);
+    }
+
+    /**
+     * @param int $id
+     * @param int $parentId
+     *
+     * @return bool
+     */
+    private function isParentAssignedToChild(int $id, int $parentId): bool
+    {
+        $productCategory = $this->getProductCategory($parentId);
+
+        if ($productCategory->getAttribute('parent_id') === $id) {
+            return true;
+        }
+
+        if ($productCategory->getAttribute('parent_id') === null) {
+            return false;
+        }
+
+        return $this->isParentAssignedToChild($id, $productCategory->getAttribute('parent_id'));
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool
+     */
+    private function categoryChildrenHaveChildren(int $id): bool
+    {
+        $productCategory = $this->getProductCategory($id);
+
+        if ($productCategory->children()->count() === 0) {
+            return false;
+        }
+
+        foreach ($productCategory->children as $child) {
+            if ($child->children()->count() > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

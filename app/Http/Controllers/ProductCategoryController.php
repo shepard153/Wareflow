@@ -66,8 +66,8 @@ class ProductCategoryController extends Controller
 
             return back()->with('error', $e->getMessage());
         }
-        return back()->with('message', __('Product category successfully updated.'));
 
+        return back()->with('message', __('Product category successfully updated.'));
     }
 
     /**
