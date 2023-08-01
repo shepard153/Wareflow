@@ -31,6 +31,11 @@ class ProductCategoryController extends Controller
         ]);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return Response
+     */
     public function show(int $id): Response
     {
         $productCategory = $this->productCategoryService->getProductCategory($id);

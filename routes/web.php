@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShipmentController;
+use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Route;
@@ -49,7 +50,8 @@ Route::middleware([
         Route::get('/', [ProductController::class, 'index'])->name('products')->breadcrumb('Products');
         Route::get('/create', [ProductController::class, 'create'])->name('products.create')->breadcrumb('Create', 'products');
         Route::post('/store', [ProductController::class, 'store'])->name('products.store');
-        Route::get('/{id}', [ProductController::class, 'show'])->name('products.show')->breadcrumb('Product Details', 'products');
+        Route::get('/{id}', [ProductController::class, 'show'])->name('products.show')
+            ->breadcrumb(fn (int $id) => Product::find($id)?->getAttribute('name'), 'products');
         Route::patch('/{id}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/{id}', [ProductController::class, 'delete'])->name('products.delete');
     });
