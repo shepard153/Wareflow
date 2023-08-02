@@ -20,4 +20,31 @@ interface ProductServiceInterface
      * @return Collection
      */
     public function getProducts(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function getProductsList(): Collection;
+
+    /**
+     * @param array $data
+     *
+     * @return Product
+     */
+    public function create(array $data): Product;
+
+    /**
+     * @param int $id
+     * @param array $data
+     *
+     * @return Product
+     */
+    public function update(int $id, array $data): Product;
+
+    /**
+     * @param int $id
+     *
+     * @return void
+     */
+    public function delete(int $id): void;
 }

@@ -29,6 +29,14 @@ class ProductService implements ProductServiceInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getProductsList(): Collection
+    {
+        return Product::with('category', 'stockQuantity')->get();
+    }
+
+    /**
      * @param array $data
      *
      * @return Product

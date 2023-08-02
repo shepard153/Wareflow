@@ -1,20 +1,44 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
+import { router } from "@inertiajs/vue3";
 import AppLayout from '@/Layouts/AppLayout.vue';
+import ConfirmationModal from "@/Components/Modals/ConfirmationModal.vue";
 import DialogModal from "@/Components/Modals/DialogModal.vue";
+import DangerButton from '@/Components/Buttons/DangerButton.vue';
+import SecondaryButton from '@/Components/Buttons/SecondaryButton.vue';
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
 import ProductsList from '@/Pages/Products/ProductsList.vue';
+import ProductForm from './Products/ProductForm.vue';
 
 defineProps({
   products: Object,
 })
 
-const dialogModalShow = ref(false);
+const selectedProduct = ref(null);
+const confirmationModalShow = ref(false);
+
+const dialogModalShow = false;
+
+const deleteProduct = (product) => {
+  selectedProduct.value = product;
+  confirmationModalShow.value = true;
+}
+
+const deleteConfirmed = () => {
+  router.delete(route('products.delete', {
+    'id': selectedProduct.value.id
+  }), {
+    preserveScroll: true,
+    onSuccess: () => {
+      confirmationModalShow.value = false
+    }
+  });
+}
 </script>
 
 <template>
   <!-- ToDo: Products table w/ pagination -->
-  <!-- ToDo: Create/Show/Update/Delete -->
+  <!-- ToDo: Show/Update -->
 
   <AppLayout title="Products">
     <div class="bg-white dark:bg-gray-800 shadow">
@@ -25,8 +49,8 @@ const dialogModalShow = ref(false);
       </div>
     </div>
 
-    <div v-if="products.items">
-      <ProductsList :products="products" />
+    <div v-if="products.length > 0">
+      <ProductsList :products="products" @deleteProduct="deleteProduct"/>
     </div>
 
     <div v-else class="flex flex-col max-w-3xl justify-center space-y-8 mx-auto py-12 text-center text-2xl">
@@ -39,8 +63,36 @@ const dialogModalShow = ref(false);
       </template>
 
       <template #content>
+        <Suspense>
+          <ProductForm/>
 
+          <template #fallback>
+            Loading...
+          </template>
+        </Suspense>
       </template>
     </DialogModal>
+
+    <ConfirmationModal :show="confirmationModalShow" @close="confirmationModalShow = false">
+      <template #title>
+        {{ $t('Deletion warning!') }}
+      </template>
+
+      <template #content>
+        {{ $t("You're about to delete :productName. Are you sure you want to delete it?", { 'productName': selectedProduct.name }) }}
+      </template>
+
+      <template #footer>
+        <form @submit.prevent="deleteConfirmed" class="space-x-2">
+          <SecondaryButton @click="confirmationModalShow = false">
+            {{ $t('Abort') }}
+          </SecondaryButton>
+
+          <DangerButton :type="'submit'">
+            {{ $t('Confirm delete') }}
+          </DangerButton>
+        </form>
+      </template>
+    </ConfirmationModal>
   </AppLayout>
 </template>

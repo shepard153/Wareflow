@@ -1,7 +1,15 @@
 <script setup>
+import DangerButton from '@/Components/Buttons/DangerButton.vue';
+
 defineProps({
   products: Object,
 });
+
+const emit = defineEmits(['deleteProduct']);
+
+const deleteProduct = (product) => {
+  emit('deleteProduct', product);
+};
 </script>
 
 <template>
@@ -17,7 +25,16 @@ defineProps({
                   {{ $t('Name') }}
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  {{ $t('Category') }}
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   {{ $t('Description') }}
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  {{ $t('SKU') }}
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  {{ $t('Stock quantity') }}
                 </th>
                 <th scope="col" class="relative px-6 py-3">
                   <span class="sr-only">{{ $t('Actions') }}</span>
@@ -33,12 +50,32 @@ defineProps({
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm text-gray-900 dark:text-gray-100">
+                    {{ product.category.name }}
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-gray-100">
                     {{ product.description }}
                   </div>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-gray-100">
+                    {{ product.sku }}
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-gray-100">
+                    {{ product.stock_quantity.quantity ?? 0 }}
+                  </div>
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <a href="#" class="text-indigo-600 hover:text-indigo-900">{{ $t('Edit') }}</a>
-                  <a href="#" class="text-red-600 hover:text-red-900">{{ $t('Delete') }}</a>
+                  <a href="#" class="text-indigo-600 hover:text-indigo-900">
+                    {{ $t('Edit') }}
+                  </a>
+
+                  <DangerButton @click="deleteProduct(product)">
+                    {{ $t('Delete') }}
+                  </DangerButton>
                 </td>
               </tr>
               </tbody>
