@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import DialogModal from "@/Components/Modals/DialogModal.vue";
 import SuccessButton from '@/Components/Buttons/SuccessButton.vue';
+import ProductsList from '@/Pages/Products/ProductsList.vue';
 
 defineProps({
   products: Object,
@@ -13,7 +14,6 @@ const dialogModalShow = ref(false);
 
 <template>
   <!-- ToDo: Products table w/ pagination -->
-  <!-- ToDo: No products message -->
   <!-- ToDo: Create/Show/Update/Delete -->
 
   <AppLayout title="Products">
@@ -25,13 +25,12 @@ const dialogModalShow = ref(false);
       </div>
     </div>
 
-    <div class="flex flex-col max-w-3xl justify-center space-y-8 mx-auto py-12">
-      <div class="flex flex-col">
-        <div class="py-2 px-3 font-semibold border-y">
-          {{ $t('Product name') }}
-        </div>
+    <div v-if="products.items">
+      <ProductsList :products="products" />
+    </div>
 
-      </div>
+    <div v-else class="flex flex-col max-w-3xl justify-center space-y-8 mx-auto py-12 text-center text-2xl">
+      {{ $t('No products found.') }}
     </div>
 
     <DialogModal :show="dialogModalShow" @close="dialogModalShow = false">

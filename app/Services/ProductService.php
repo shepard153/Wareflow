@@ -27,4 +27,38 @@ class ProductService implements ProductServiceInterface
     {
         return Product::all();
     }
+
+    /**
+     * @param array $data
+     *
+     * @return Product
+     */
+    public function create(array $data): Product
+    {
+        return Product::create($data);
+    }
+
+    /**
+     * @param int $id
+     * @param array $data
+     *
+     * @return Product
+     */
+    public function update(int $id, array $data): Product
+    {
+        $product = Product::find($id);
+        $product->update($data);
+
+        return $product;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        Product::destroy($id);
+    }
 }
