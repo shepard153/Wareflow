@@ -1,6 +1,6 @@
 <script setup>
 import {Head, Link} from '@inertiajs/vue3';
-import Login from '@/Pages/Auth/Login.Vue';
+import Login from '@/Pages/Auth/Login.vue';
 
 defineProps({
   canRegister: Boolean,
