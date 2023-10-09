@@ -39,6 +39,13 @@ class HandleInertiaRequests extends Middleware
         ],
         [
             'breadcrumbs' => $request->route()->breadcrumbs()->jsonSerialize()
-        ]);
+        ],
+        [
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error'   => fn () => $request->session()->get('error'),
+            ],
+        ]
+        );
     }
 }
