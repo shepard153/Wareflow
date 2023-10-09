@@ -17,7 +17,7 @@ defineProps({
 const selectedProduct = ref(null);
 const confirmationModalShow = ref(false);
 
-const dialogModalShow = false;
+const dialogModalShow = ref(false);
 
 const deleteProduct = (product) => {
   selectedProduct.value = product;
@@ -64,7 +64,7 @@ const deleteConfirmed = () => {
 
       <template #content>
         <Suspense>
-          <ProductForm/>
+          <ProductForm @close="dialogModalShow = false"/>
 
           <template #fallback>
             Loading...
