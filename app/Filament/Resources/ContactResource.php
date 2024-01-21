@@ -10,14 +10,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContactResource extends Resource
 {
     protected static ?string $model = Contact::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     public static function form(Form $form): Form
     {
@@ -43,20 +41,34 @@ class ContactResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('Nazwa'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('address'),
-                Tables\Columns\TextColumn::make('phone'),
-                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('address')
+                    ->label(__('Adres'))
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label(__('Telefon'))
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('contact_type')
+                    ->label(__('Typ'))
                     ->icon(fn (string $state): string => match ($state) {
-                        'sender'    => 'heroicon-o-pencil',
-                        'recipient' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                        'sender'    => 'heroicon-o-arrow-right-start-on-rectangle',
+                        'recipient' => 'heroicon-o-arrow-left-end-on-rectangle',
+                        'carrier'   => 'heroicon-o-truck',
                     })
-            ])
-            ->filters([
-                //
-            ])
+                    ->color(fn (string $state): string => match ($state) {
+                        'sender'    => 'gray',
+                        'recipient' => 'warning',
+                        'carrier'   => 'info',
+                    })
+                    ->tooltip(fn (string $state): string => match ($state) {
+                        'sender'    => 'Nadawca',
+                        'recipient' => 'Odbiorca',
+                        'carrier'   => 'Przewoźnik',
+                    }),
+                ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

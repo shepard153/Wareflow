@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         if (! app()->environment('production')) {
             \App\Models\Warehouse::factory(3)->create();
             \App\Models\ProductCategory::factory(10)->create();
-        #    \App\Models\Product::factory(10)->create();
-        #    \App\Models\Contact::factory(10)->create();
+            \App\Models\Product::factory(100)->create();
+            \App\Models\Contact::factory(10)->create();
         }
     }
 }

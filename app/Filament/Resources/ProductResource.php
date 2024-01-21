@@ -20,7 +20,7 @@ class ProductResource extends Resource
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $modelLabel = 'Produkt';
     protected static ?string $pluralModelLabel = 'Produkty';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-gift-top';
     protected static ?string $navigationGroup = 'Zarządzanie produktami';
 
     public static function rules(): array
@@ -57,19 +57,33 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('category.name')
+                    ->label(__('Kategoria'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->description(fn (Product $record) => $record->getAttribute('description'))
+                    ->label(__('Nazwa'))
+                    ->description(fn (Product $record) => substr($record->getAttribute('description'), 0, 50) . '...')
+                    ->tooltip(function (Product $record): ?string {
+                        $description = $record->getAttribute('description');
+
+                        if (strlen($description) <= 50) {
+                            return null;
+                        }
+
+                        return $description;
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('unit_of_measure')
+                    ->label(__('Jednostka'))
                     ->searchable(),
                 Tables\Columns\IconColumn::make('has_variants')
+                    ->label(__('Warianty'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('stockQuantity.quantity')
+                    ->label(__('Stan magazynowy'))
                     ->numeric()
                     ->default(0),
             ])
@@ -95,13 +109,6 @@ class ProductResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-    
     public static function getPages(): array
     {
         return [

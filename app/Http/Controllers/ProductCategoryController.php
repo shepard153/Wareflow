@@ -18,36 +18,6 @@ class ProductCategoryController extends Controller
     }
 
     /**
-     * @return Response
-     */
-    public function index(): Response
-    {
-        $productCategories = $this->productCategoryService->getProductCategories();
-        $productCategoryTree = $this->productCategoryService->getProductCategoryTree();
-
-        return Inertia::render('ProductCategories', [
-            'productCategories' => $productCategories,
-            'productCategoryTree' => $productCategoryTree
-        ]);
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show(int $id): Response
-    {
-        $productCategory = $this->productCategoryService->getProductCategory($id);
-        $categoryProducts = $productCategory->products()->paginate(10);
-
-        return Inertia::render('ProductCategories/ProductCategoryDetails', [
-            'productCategory' => $productCategory,
-            'categoryProducts' => $categoryProducts
-        ]);
-    }
-
-    /**
      * @param ProductCategoryRequest $request
      *
      * @return RedirectResponse
