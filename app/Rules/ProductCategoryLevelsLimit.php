@@ -27,26 +27,8 @@ class ProductCategoryLevelsLimit implements ValidationRule
     {
         $productCategoryParent = $this->productCategoryService->getProductCategory($value);
 
-        $count = $this->getParentCategoriesCount($value);
-
-        if ($count >= 2) {
-            $fail(__('Cannot nest more than two levels deep in the category hierarchy.'));
+        if ($productCategoryParent->getAttribute('children')->count() > 0) {
+            $fail(__('Category with child elements cannot be a subcategory.'));
         }
-    }
-
-    /**
-     * @param int $productCategoryId
-     *
-     * @return int
-     */
-    private function getParentCategoriesCount(int $productCategoryId): int
-    {
-        $productCategory = $this->productCategoryService->getProductCategory($productCategoryId);
-
-        if ($productCategory->getAttribute('parent_id') === null) {
-            return 0;
-        }
-
-        return 1 + $this->getParentCategoriesCount($productCategory->getAttribute('parent_id'));
     }
 }

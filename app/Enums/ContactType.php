@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum ContactType
+use BenSampo\Enum\Enum;
+
+final class ContactType extends Enum
 {
     const Sender = 'sender';
     const Recipient = 'recipient';

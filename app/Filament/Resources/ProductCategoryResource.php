@@ -5,11 +5,13 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductCategoryResource\Pages;
 use App\Http\Requests\ProductCategoryRequest;
 use App\Models\ProductCategory;
+use App\Services\Interfaces\ProductCategoryServiceInterface;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -42,10 +44,12 @@ class ProductCategoryResource extends Resource
                     ->label(__('Nazwa kategorii'))
                     ->autofocus()
                     ->required()
+                    ->unique(column: 'name', ignoreRecord: true)
                     ->rules(self::rules()['name']),
                 Toggle::make('is_subcategory')
                     ->label(__('Podkategoria'))
                     ->formatStateUsing(fn (Get $get) => $get('parent_id') !== null)
+                    ->disabled(fn (ProductCategory $productCategory) => $productCategory->children()->count() > 0)
                     ->live(),
                 Select::make('parent_id')
                     ->label(__('Kategoria nadrzędna'))
@@ -57,6 +61,7 @@ class ProductCategoryResource extends Resource
                         ProductCategory::query()
                             ->withoutGlobalScope(SoftDeletingScope::class)
                             ->whereNull('parent_id')
+                            ->whereNot('id', $form->model->getKey())
                             ->get()
                             ->mapWithKeys(function (ProductCategory $productCategory) {
                                 return [$productCategory->getKey() => $productCategory->name];
@@ -85,8 +90,21 @@ class ProductCategoryResource extends Resource
             ->actions([
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\EditAction::make()->action(function (ProductCategory $productCategory, array $data) {
+                        $data['parent_id'] = $data['is_subcategory'] ? $data['parent_id'] : null;
+
+                        $productCategory->update($data);
+                    }),
+                    Tables\Actions\DeleteAction::make()->action(function (ProductCategory $productCategory) {
+                        try {
+                            resolve(ProductCategoryServiceInterface::class)->delete($productCategory->getKey());
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->title($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
                 ]),
             ]);
     }

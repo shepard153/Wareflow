@@ -11,8 +11,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::create([
+            'name'     => 'Admin',
+            'email'    => 'test@example.com',
+            'password' => bcrypt('test'),
+        ]);
 
-        $this->call(ProductCategorySeeder::class);
+        if (! app()->environment('production')) {
+            \App\Models\Warehouse::factory(3)->create();
+            \App\Models\ProductCategory::factory(10)->create();
+        #    \App\Models\Product::factory(10)->create();
+        #    \App\Models\Contact::factory(10)->create();
+        }
     }
 }
