@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum StockMoveStatus
+use BenSampo\Enum\Enum;
+
+final class StockMoveStatus extends Enum
 {
     const Draft = 'draft';
     const Pending = 'pending';

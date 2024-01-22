@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('shipment_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('shipment_id');
-            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('location_id')->nullable();
-            $table->string('item_type'); // To store the item type (product or product variation)
             $table->integer('quantity');
             $table->string('batch_number')->nullable();
             $table->string('barcode')->nullable();
@@ -24,6 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('shipment_id')->references('id')->on('shipments')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('location_id')->references('id')->on('product_locations');
         });
     }

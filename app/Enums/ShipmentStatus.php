@@ -2,7 +2,8 @@
 
 namespace App\Enums;
 
-enum ShipmentStatus
+use BenSampo\Enum\Enum;
+final class ShipmentStatus extends Enum
 {
     const Created = 'created';
     const Pending = 'pending';

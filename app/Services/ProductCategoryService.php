@@ -30,50 +30,6 @@ class ProductCategoryService implements ProductCategoryServiceInterface
     }
 
     /**
-     * @return Collection
-     */
-    public function getProductCategoryTree(): Collection
-    {
-        $productCategories = ProductCategory::all();
-
-        return $productCategories->map(function (ProductCategory $productCategory) use ($productCategories) {
-            return $this->mapProductCategoryChildrenRecursive($productCategories, $productCategory);
-        })->filter(function (Collection $productCategory) {
-            return $productCategory->get('parent_id') === null;
-        });
-    }
-
-    /**
-     * @param Collection $productCategories
-     * @param ProductCategory $productCategory
-     *
-     * @return Collection
-     */
-    private function mapProductCategoryChildrenRecursive(Collection $productCategories, ProductCategory $productCategory): Collection
-    {
-        $productCategoryChildren = $productCategories->where('parent_id', $productCategory->getAttribute('id'));
-
-        return collect([
-            'id'        => $productCategory->getAttribute('id'),
-            'name'      => $productCategory->getAttribute('name'),
-            'parent_id' => $productCategory->getAttribute('parent_id'),
-            'children'  => $productCategoryChildren->map(function (ProductCategory $productCategoryChild) use ($productCategories) {
-                return $this->mapProductCategoryChildrenRecursive($productCategories, $productCategoryChild);
-            }),
-        ]);
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return void
-     */
-    public function create(array $data): void
-    {
-        ProductCategory::create($data);
-    }
-
-    /**
      * @param int $id
      * @param array $data
      *
@@ -85,11 +41,8 @@ class ProductCategoryService implements ProductCategoryServiceInterface
         if($data['is_subcategory']) {
             $parentId = (int) $data['parent_id'];
 
-            $parentId === $id
-                ? throw new Exception(__('Cannot assign category to itself.')) : null;
-
             $this->isParentAssignedToChild($id, $parentId)
-                ? throw new Exception(__('Cannot assign category to its child.')) : null;
+                ?? throw new Exception(__('Cannot assign category to its child.'));
 
             if ($this->categoryChildrenHaveChildren($id)
                 || ($this->getProductCategory($id)->children()->count() >= 1
