@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('contact_id');
             $table->unsignedBigInteger('warehouse_id');
 
-            $table->integer('quantity');
             $table->text('description')->nullable();
             $table->string('reference')->nullable();
             $table->string('tracking_number')->nullable();
@@ -31,7 +29,6 @@ return new class extends Migration
             $table->date('shipment_date')->nullable();
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('contact_id')->references('id')->on('contacts');
             $table->foreign('warehouse_id')->references('id')->on('warehouses');
         });

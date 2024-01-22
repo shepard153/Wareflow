@@ -13,8 +13,7 @@ class ShipmentItem extends Model
 
     protected $fillable = [
         'shipment_id',
-        'item_id',
-        'item_type',
+        'product_id',
         'location_id',
         'quantity',
         'batch_number',
@@ -33,9 +32,9 @@ class ShipmentItem extends Model
     /**
      * @return MorphTo
      */
-    public function item(): MorphTo
+    public function product(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Product::class);
     }
 
     /**

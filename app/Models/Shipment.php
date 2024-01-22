@@ -17,7 +17,6 @@ class Shipment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
         'contact_id',
         'warehouse_id',
         'shipment_type',
@@ -34,14 +33,6 @@ class Shipment extends Model
         'shipment_type' => ShipmentType::class,
         'status'        => ShipmentStatus::class,
     ];
-
-    /**
-     * @return BelongsTo
-     */
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
 
     /**
      * @return BelongsTo
