@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductLocation>
+ * @extends Factory<\App\Models\ProductLocation>
  */
 class ProductLocationFactory extends Factory
 {
@@ -20,7 +20,7 @@ class ProductLocationFactory extends Factory
             'warehouse_id' => \App\Models\Warehouse::factory(),
             'aisle'        => strtoupper($this->faker->randomLetter()),
             'shelf'        => $this->faker->randomLetter(),
-            'bin'          => $this->faker->randomNumber(3),
+            'bin'          => $this->faker->randomNumber(2),
         ];
     }
 }

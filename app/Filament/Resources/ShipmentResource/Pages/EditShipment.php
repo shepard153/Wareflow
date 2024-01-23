@@ -17,4 +17,18 @@ class EditShipment extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        if ($this->record->getAttribute('lastStatus')->getAttribute('status') !== $this->data['status']) {
+            $this->record->statusHistories()->create([
+                'status' => $this->data['status'],
+            ]);
+        }
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('view', ['record' => $this->getRecord()]);
+    }
 }

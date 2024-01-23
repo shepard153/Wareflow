@@ -16,4 +16,12 @@ class ViewShipment extends ViewRecord
             Actions\EditAction::make(),
         ];
     }
+
+    public function getTitle(): string
+    {
+        return __('Dostawa :id (:contact)', [
+            'id'      => $this->record->getAttribute('reference'),
+            'contact' => $this->record->getAttribute('contact')->getAttribute('name'),
+        ]);
+    }
 }

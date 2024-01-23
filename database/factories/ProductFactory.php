@@ -18,7 +18,7 @@ class ProductFactory extends Factory
     {
         return [
             'category_id'     => \App\Models\ProductCategory::factory(),
-            'name'            => $this->faker->word,
+            'name'            => $this->faker->unique()->word(),
             'description'     => $this->faker->text(255),
             'unit_of_measure' => $this->faker->randomElement(['kg', 'l', 'm', 'm2', 'm3', 'szt']),
             'sku'             => $this->faker->unique()->numberBetween(1000000000000, 9999999999999),

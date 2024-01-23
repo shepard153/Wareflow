@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Shipment>
+ * @extends Factory<\App\Models\Shipment>
  */
 class ShipmentFactory extends Factory
 {
@@ -24,8 +24,10 @@ class ShipmentFactory extends Factory
             'tracking_number' => $this->faker->randomLetter() . $this->faker->randomNumber(7),
             'shipment_type'   => $this->faker->randomElement(['incoming', 'outgoing', 'warehouse_transfer']),
             'status'          => $this->faker->randomElement(['created', 'pending', 'on_hold', 'in_transit', 'delivered', 'canceled']),
-            'scheduled_date'  => $this->faker->date(),
-            'shipment_date'   => $this->faker->date(),
+            'scheduled_date'  => $this->faker->dateTimeBetween('-1 week', '+3 weeks'),
+            'shipment_date'   => function (array $attributes): ?\DateTime {
+                return $attributes['status'] === 'delivered' ? $this->faker->dateTimeBetween(now(), '+1 week') : null;
+            },
         ];
     }
 }

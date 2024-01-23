@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ShipmentStatus;
 use App\Models\Contact;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductLocation;
 use App\Models\Shipment;
 use App\Models\ShipmentItem;
+use App\Models\StockQuantity;
 use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
@@ -51,7 +53,28 @@ class DatabaseSeeder extends Seeder
                         'product_id'  => fake()->randomElement($products->toArray()),
                         'location_id' => fake()->randomElement($productLocations->toArray()),
                     ])->make()->toArray()
-                );
+                )->each(function (ShipmentItem $shipmentItem): void {
+                    StockQuantity::factory()->create([
+                        'product_id'   => $shipmentItem->getAttribute('product_id'),
+                        'location_id'  => $shipmentItem->getAttribute('location_id'),
+                        'quantity'     => $shipmentItem->getAttribute('quantity'),
+                    ]);
+                });
+
+                if ($shipment->getAttribute('status')->value !== ShipmentStatus::Created) {
+                    $shipment->statusHistories()->createMany([
+                        [
+                            'status' => ShipmentStatus::Created,
+                        ],
+                        [
+                            'status' => $shipment->getAttribute('status'),
+                        ],
+                    ]);
+                } else {
+                    $shipment->statusHistories()->create([
+                        'status' => $shipment->getAttribute('status'),
+                    ]);
+                }
             });
         }
     }

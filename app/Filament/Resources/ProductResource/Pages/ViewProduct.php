@@ -16,4 +16,11 @@ class ViewProduct extends ViewRecord
             Actions\EditAction::make(),
         ];
     }
+
+    public function getTitle(): string
+    {
+        return __('Produkt :name', [
+            'name' => $this->record->getAttribute('name'),
+        ]);
+    }
 }

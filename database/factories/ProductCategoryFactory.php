@@ -18,7 +18,7 @@ class ProductCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'      => $this->faker->word,
+            'name'      => $this->faker->unique()->word,
             'parent_id' => rand(0, 1) === 1
                 ? ProductCategory::factory(state: ['parent_id' => null])->create()->id
                 : null,

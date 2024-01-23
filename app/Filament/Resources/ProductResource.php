@@ -85,6 +85,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('stockQuantity.quantity')
                     ->label(__('Stan magazynowy'))
                     ->numeric()
+                    ->state(fn (Product $product) => $product->getAttribute('stockQuantity')->sum('quantity'))
                     ->default(0),
             ])
             ->filters([
@@ -100,12 +101,32 @@ class ProductResource extends Resource
     {
         return $infolist
             ->schema([
-                Infolists\Components\TextEntry::make('category.name'),
-                Infolists\Components\TextEntry::make('name'),
+                Infolists\Components\TextEntry::make('category.name')
+                    ->label(__('Kategoria')),
+                Infolists\Components\TextEntry::make('name')
+                    ->label(__('Nazwa')),
                 Infolists\Components\TextEntry::make('sku'),
-                Infolists\Components\TextEntry::make('unit_of_measure'),
-                Infolists\Components\TextEntry::make('variations.name')
-                    ->listWithLineBreaks()
+                Infolists\Components\TextEntry::make('unit_of_measure')
+                    ->label(__('Jednostka')),
+                Infolists\Components\TextEntry::make('description')
+                    ->label(__('Opis produktu'))
+                    ->columnSpanFull(),
+                Infolists\Components\RepeatableEntry::make('stockQuantity')
+                    ->label(__('Stan magazynowy wraz z lokalizacją'))
+                    ->default(['empty'])
+                    ->schema([
+                        Infolists\Components\TextEntry::make('location.warehouse.name')
+                            ->label(__('Magazyn'))
+                            ->default('-'),
+                        Infolists\Components\TextEntry::make('location.fullLocation')
+                            ->label(__('Lokalizacja'))
+                            ->default('-'),
+                        Infolists\Components\TextEntry::make('quantity')
+                            ->label(__('Ilość'))
+                            ->default('-'),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull()
             ]);
     }
 
