@@ -27,13 +27,16 @@ class DatabaseSeeder extends Seeder
         ]);
 
         if (! app()->environment('production')) {
+            $this->call([
+                ProductCategorySeeder::class,
+                ProductSeeder::class
+            ]);
+
             $warehouses = Warehouse::factory(3)->create()->pluck('id');
 
-            $productCategories = ProductCategory::factory(10)->create()->pluck('id');
+            $productCategories = ProductCategory::query()->pluck('id');
 
-            $products = Product::factory(100)->sequence(fn (Sequence $sequence): array => [
-                'category_id' => fake()->randomElement($productCategories->toArray()),
-            ])->create()->pluck('id');
+            $products = Product::query()->pluck('id');
 
             $contacts = Contact::factory(10)->create()->pluck('id');
 

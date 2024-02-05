@@ -61,7 +61,7 @@ class ProductCategoryResource extends Resource
                         ProductCategory::query()
                             ->withoutGlobalScope(SoftDeletingScope::class)
                             ->whereNull('parent_id')
-                            ->whereNot('id', $form->model->getKey())
+                          #  ->whereNot('id', $form->model->getKey())
                             ->get()
                             ->mapWithKeys(function (ProductCategory $productCategory) {
                                 return [$productCategory->getKey() => $productCategory->name];
@@ -80,6 +80,7 @@ class ProductCategoryResource extends Resource
                     ->sortable(),
                 IconColumn::make('parent_id')
                     ->label(__('Podkategoria'))
+                    ->boolean()
                     ->icon(fn (string $state): string => $state ? 'heroicon-o-check-circle' : '')
                     ->color('success'),
                 TextColumn::make('parent.name')
