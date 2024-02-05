@@ -18,7 +18,7 @@ class StockQuantityFactory extends Factory
     {
         return [
             'product_id'   => \App\Models\Product::factory(),
-            'location_id'  => \App\Models\ProductLocation::factory(),
+            'warehouse_id' => \App\Models\Warehouse::factory(),
             'quantity'     => $this->faker->numberBetween(0, 100),
         ];
     }

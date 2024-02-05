@@ -12,7 +12,6 @@ class InventoryAdjustment extends Model
 
     protected $fillable = [
         'product_id',
-        'location_id',
         'new_quantity',
         'adjustment_reason',
         'adjustment_date'
@@ -24,13 +23,5 @@ class InventoryAdjustment extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(ProductLocation::class);
     }
 }

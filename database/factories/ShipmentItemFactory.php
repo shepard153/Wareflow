@@ -19,7 +19,6 @@ class ShipmentItemFactory extends Factory
         return [
             'shipment_id'  => \App\Models\Shipment::factory(),
             'product_id'   => \App\Models\Product::factory(),
-            'location_id'  => \App\Models\ProductLocation::factory(),
             'quantity'     => $this->faker->numberBetween(1, 100),
             'batch_number' => $this->faker->randomNumber(),
             'barcode'      => $this->faker->randomNumber(),

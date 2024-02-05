@@ -172,6 +172,10 @@ class ShipmentResource extends Resource
             ]);
     }
 
+    /**
+     * @param Get $get
+     * @return array
+     */
     private static function getShipmentItemsFormSchema(Get $get): array
     {
         $productIdField = Forms\Components\Select::make('product_id')

@@ -14,7 +14,6 @@ class ShipmentItem extends Model
     protected $fillable = [
         'shipment_id',
         'product_id',
-        'location_id',
         'quantity',
         'batch_number',
         'barcode',
@@ -35,13 +34,5 @@ class ShipmentItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(ProductLocation::class, 'location_id');
     }
 }

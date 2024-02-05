@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('inventory_adjustments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('location_id');
             $table->integer('new_quantity');
             $table->string('adjustment_reason');
             $table->date('adjustment_date');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('location_id')->references('id')->on('product_locations');
         });
 
     }

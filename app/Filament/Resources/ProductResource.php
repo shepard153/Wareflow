@@ -112,21 +112,17 @@ class ProductResource extends Resource
                     ->label(__('Opis produktu'))
                     ->columnSpanFull(),
                 Infolists\Components\RepeatableEntry::make('stockQuantity')
-                    ->label(__('Stan magazynowy wraz z lokalizacją'))
+                    ->label(__('Stany magazynów'))
                     ->default(['empty'])
                     ->schema([
-                        Infolists\Components\TextEntry::make('location.warehouse.name')
+                        Infolists\Components\TextEntry::make('warehouse.name')
                             ->label(__('Magazyn'))
-                            ->default('-'),
-                        Infolists\Components\TextEntry::make('location.fullLocation')
-                            ->label(__('Lokalizacja'))
                             ->default('-'),
                         Infolists\Components\TextEntry::make('quantity')
                             ->label(__('Ilość'))
                             ->default('-'),
                     ])
-                    ->columns(3)
-                    ->columnSpanFull()
+                    ->columns(2)
             ]);
     }
 

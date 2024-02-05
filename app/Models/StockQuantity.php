@@ -13,7 +13,7 @@ class StockQuantity extends Model
     protected $fillable = [
         'product_id',
         'product_variation_id',
-        'location_id',
+        'warehouse_id',
         'quantity',
     ];
 
@@ -36,8 +36,8 @@ class StockQuantity extends Model
     /**
      * @return BelongsTo
      */
-    public function location(): BelongsTo
+    public function warehouse(): BelongsTo
     {
-        return $this->belongsTo(ProductLocation::class, 'location_id');
+        return $this->belongsTo(Warehouse::class);
     }
 }

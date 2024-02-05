@@ -36,7 +36,6 @@ class ShipmentRequest extends FormRequest
             'shipment_date'                => ['nullable', 'date'],
             'shipmentItems'                => ['required', 'array', 'min:1'],
             'shipmentItems.*.product_id'   => ['required', 'exists:products,id'],
-            'shipmentItems.*.location_id'  => ['required', 'exists:product_locations,id'],
             'shipmentItems.*.quantity'     => ['required', 'integer', 'min:1'],
             'shipmentItems.*.batch_number' => ['nullable', 'string', 'max:255'],
             'shipmentItems.*.barcode'      => ['nullable', 'string', 'max:255'],

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('shipment_id');
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('location_id')->nullable();
             $table->integer('quantity');
             $table->string('batch_number')->nullable();
             $table->string('barcode')->nullable();
@@ -24,7 +23,6 @@ return new class extends Migration
 
             $table->foreign('shipment_id')->references('id')->on('shipments')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('location_id')->references('id')->on('product_locations');
         });
     }
 

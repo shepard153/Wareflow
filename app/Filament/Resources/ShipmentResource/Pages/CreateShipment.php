@@ -4,9 +4,7 @@ namespace App\Filament\Resources\ShipmentResource\Pages;
 
 use App\Enums\ShipmentType;
 use App\Filament\Resources\ShipmentResource;
-use App\Models\ProductLocation;
 use App\Models\StockQuantity;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateShipment extends CreateRecord
@@ -19,7 +17,6 @@ class CreateShipment extends CreateRecord
             ShipmentType::Incoming => $this->record->getAttribute('shipmentItems')->each(function ($shipmentItem): void {
                 StockQuantity::query()->create([
                     'product_id'   => $shipmentItem->getAttribute('product_id'),
-                    'location_id'  => ProductLocation::inRandomOrder()->first()->getAttribute('id'),
                     'quantity'     => $shipmentItem->getAttribute('quantity'),
                 ]);
             }),
