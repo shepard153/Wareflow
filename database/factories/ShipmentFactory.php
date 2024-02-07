@@ -20,13 +20,14 @@ class ShipmentFactory extends Factory
             'contact_id'      => \App\Models\Contact::factory(),
             'warehouse_id'    => \App\Models\Warehouse::factory(),
             'description'     => $this->faker->sentence(),
-            'reference'       => $this->faker->randomNumber(5),
             'tracking_number' => $this->faker->randomLetter() . $this->faker->randomNumber(7),
             'shipment_type'   => $this->faker->randomElement(['incoming', 'outgoing', 'warehouse_transfer']),
             'status'          => $this->faker->randomElement(['created', 'pending', 'on_hold', 'in_transit', 'delivered', 'canceled']),
             'scheduled_date'  => $this->faker->dateTimeBetween('-1 week', '+3 weeks'),
             'shipment_date'   => function (array $attributes): ?\DateTime {
-                return $attributes['status'] === 'delivered' ? $this->faker->dateTimeBetween(now(), '+1 week') : null;
+                return $attributes['status'] === 'delivered'
+                    ? $this->faker->dateTimeBetween($attributes['scheduled_date'], $attributes['scheduled_date']->format('Y-m-d H:i:s') . ' +3 days')
+                    : null;
             },
         ];
     }
