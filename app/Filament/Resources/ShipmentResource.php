@@ -100,14 +100,6 @@ class ShipmentResource extends Resource
         return Wizard\Step::make('shipment.details')
             ->label(__('Szczegóły dostawy'))
             ->schema([
-                Forms\Components\TextInput::make('reference')
-                    ->label(__('Numer referencyjny'))
-                    ->autofocus()
-                    ->required()
-                    ->disabled()
-                    ->dehydrated()
-                    ->rules(self::rules()['reference'])
-                    ->unique('shipments', 'reference', ignoreRecord: true),
                 Forms\Components\TextInput::make('tracking_number')
                     ->label(__('Numer przesyłki'))
                     ->rules(self::rules()['tracking_number'])
@@ -119,10 +111,7 @@ class ShipmentResource extends Resource
                     ->disabled(fn (Shipment $shipment): bool => $shipment->id !== null)
                     ->required()
                     ->rules(self::rules()['shipment_type'])
-                    ->live()
-                    ->afterStateUpdated(function (string $state, Forms\Set $set): void {
-                        ShipmentType::getReferenceNumber($state, $set);
-                    }),
+                    ->live(),
                 Forms\Components\Select::make('status')
                     ->disabled(fn (Shipment $shipment): bool => $shipment->id === null)
                     ->default(fn (Shipment $shipment): string => $shipment->id === null ? ShipmentStatus::Created : null)

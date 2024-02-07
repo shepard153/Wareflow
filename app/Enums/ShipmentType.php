@@ -2,9 +2,7 @@
 
 namespace App\Enums;
 
-use App\Models\Shipment;
 use BenSampo\Enum\Enum;
-use Filament\Forms\Set;
 
 final class ShipmentType extends Enum
 {
@@ -48,16 +46,6 @@ final class ShipmentType extends Enum
             self::Outgoing          => 'heroicon-o-arrow-up',
             self::WarehouseTransfer => 'heroicon-o-arrows-up-down',
             default                 => 'heroicon-o-question-mark-circle',
-        };
-    }
-
-    public static function getReferenceNumber(string $value, Set $set): ?string
-    {
-        return match ($value) {
-            self::Incoming          => $set('reference', 'I' . date('Ymd') . '-' . Shipment::query()->count()),
-            self::Outgoing          => $set('reference','O' . date('Ymd') . '-' . Shipment::query()->count()),
-            self::WarehouseTransfer => $set('reference','WT' . date('Ymd') . '-' . Shipment::query()->count()),
-            default                 => null,
         };
     }
 }

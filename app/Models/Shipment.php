@@ -34,6 +34,21 @@ class Shipment extends Model
         'status'        => ShipmentStatus::class,
     ];
 
+    // Set reference number on create
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($shipment) {
+            $shipment->reference = match ($shipment->shipment_type->value) {
+                ShipmentType::Incoming          => 'I' . date('Ymd') . '-' . Shipment::query()->count(),
+                ShipmentType::Outgoing          => 'O' . date('Ymd') . '-' . Shipment::query()->count(),
+                ShipmentType::WarehouseTransfer => 'WT' . date('Ymd') . '-' . Shipment::query()->count(),
+                default                         => null,
+            };
+        });
+    }
+
     /**
      * @return BelongsTo
      */

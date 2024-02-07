@@ -18,6 +18,11 @@ class EditShipment extends EditRecord
         ];
     }
 
+    public function getTitle(): string
+    {
+        return __('Dostawa :reference', ['reference' => $this->record->getAttribute('reference')]);
+    }
+
     protected function afterSave(): void
     {
         if ($this->record->getAttribute('lastStatus')->getAttribute('status') !== $this->data['status']) {
