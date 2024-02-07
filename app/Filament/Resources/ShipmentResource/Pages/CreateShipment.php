@@ -11,12 +11,18 @@ class CreateShipment extends CreateRecord
 {
     protected static string $resource = ShipmentResource::class;
 
+    public function getTitle(): string
+    {
+        return __('Nowa dostawa');
+    }
+
     protected function afterCreate(): void
     {
         match ($this->record->getAttribute('shipment_type')->value) {
             ShipmentType::Incoming => $this->record->getAttribute('shipmentItems')->each(function ($shipmentItem): void {
                 StockQuantity::query()->create([
                     'product_id'   => $shipmentItem->getAttribute('product_id'),
+                    'warehouse_id' => $this->record->getAttribute('warehouse_id'),
                     'quantity'     => $shipmentItem->getAttribute('quantity'),
                 ]);
             }),

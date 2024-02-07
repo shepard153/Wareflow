@@ -12,6 +12,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
@@ -103,6 +104,8 @@ class ShipmentResource extends Resource
                     ->label(__('Numer referencyjny'))
                     ->autofocus()
                     ->required()
+                    ->disabled()
+                    ->dehydrated()
                     ->rules(self::rules()['reference'])
                     ->unique('shipments', 'reference', ignoreRecord: true),
                 Forms\Components\TextInput::make('tracking_number')
@@ -111,14 +114,19 @@ class ShipmentResource extends Resource
                     ->unique('shipments', 'tracking_number', ignoreRecord: true),
                 Forms\Components\Select::make('shipment_type')
                     ->label(__('Typ dostawy'))
+                    ->native(false)
                     ->options(ShipmentType::getOptions())
                     ->disabled(fn (Shipment $shipment): bool => $shipment->id !== null)
                     ->required()
                     ->rules(self::rules()['shipment_type'])
-                    ->live(),
+                    ->live()
+                    ->afterStateUpdated(function (string $state, Forms\Set $set): void {
+                        ShipmentType::getReferenceNumber($state, $set);
+                    }),
                 Forms\Components\Select::make('status')
                     ->disabled(fn (Shipment $shipment): bool => $shipment->id === null)
                     ->default(fn (Shipment $shipment): string => $shipment->id === null ? ShipmentStatus::Created : null)
+                    ->native(false)
                     ->live()
                     ->options(ShipmentStatus::getOptions())
                     ->required()
@@ -143,11 +151,13 @@ class ShipmentResource extends Resource
                     ),
                 Forms\Components\Select::make('contact_id')
                     ->label(__('Kontrahent'))
+                    ->native(false)
                     ->relationship('contact', 'name')
                     ->required()
                     ->rules(self::rules()['contact_id']),
                 Forms\Components\Select::make('warehouse_id')
-                    ->label(__('Magazyn dostawy'))
+                    ->label(__('Magazyn dostawy/odbioru'))
+                    ->native(false)
                     ->relationship('warehouse', 'name')
                     ->required()
                     ->rules(self::rules()['warehouse_id']),
