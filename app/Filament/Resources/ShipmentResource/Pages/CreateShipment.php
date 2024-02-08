@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ShipmentResource\Pages;
 
 use App\Enums\ShipmentType;
 use App\Filament\Resources\ShipmentResource;
-use App\Models\StockQuantity;
+use App\Models\StockItem;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateShipment extends CreateRecord
@@ -19,18 +19,13 @@ class CreateShipment extends CreateRecord
     protected function afterCreate(): void
     {
         match ($this->record->getAttribute('shipment_type')->value) {
-            ShipmentType::Incoming => $this->record->getAttribute('shipmentItems')->each(function ($shipmentItem): void {
-                StockQuantity::query()->create([
-                    'product_id'   => $shipmentItem->getAttribute('product_id'),
-                    'warehouse_id' => $this->record->getAttribute('warehouse_id'),
-                    'quantity'     => $shipmentItem->getAttribute('quantity'),
-                ]);
-            }),
             ShipmentType::Outgoing => $this->record->getAttribute('shipmentItems')->each(function ($shipmentItem): void {
                 $quantity = $shipmentItem->getAttribute('quantity');
 
-                StockQuantity::query()
+                StockItem::query()
                     ->where('product_id', $shipmentItem->getAttribute('product_id'))
+                    ->orderBy('expiry_date')
+                    ->orderBy('created_at')
                     ->get()
                     ->each(function ($stockItem) use (&$quantity): void {
                         if ($quantity > 0) {

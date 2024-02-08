@@ -26,7 +26,10 @@ class ShipmentFactory extends Factory
             'scheduled_date'  => $this->faker->dateTimeBetween('-1 week', '+3 weeks'),
             'shipment_date'   => function (array $attributes): ?\DateTime {
                 return $attributes['status'] === 'delivered'
-                    ? $this->faker->dateTimeBetween($attributes['scheduled_date'], $attributes['scheduled_date']->format('Y-m-d H:i:s') . ' +3 days')
+                    ? $this->faker->dateTimeBetween(
+                        $attributes['scheduled_date'],
+                        $attributes['scheduled_date']->format('Y-m-d H:i:s') . ' +3 days'
+                    )
                     : null;
             },
         ];

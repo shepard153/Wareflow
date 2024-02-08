@@ -3,12 +3,13 @@
 namespace Database\Seeders;
 
 use App\Enums\ShipmentStatus;
+use App\Enums\ShipmentType;
 use App\Models\Contact;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Shipment;
 use App\Models\ShipmentItem;
-use App\Models\StockQuantity;
+use App\Models\StockItem;
 use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
@@ -51,11 +52,15 @@ class DatabaseSeeder extends Seeder
                         'product_id'  => fake()->randomElement($products->toArray()),
                     ])->make()->toArray()
                 )->each(function (ShipmentItem $shipmentItem): void {
-                    StockQuantity::query()->create([
-                        'product_id'   => $shipmentItem->getAttribute('product_id'),
-                        'warehouse_id' => $shipmentItem->getAttribute('shipment')->getAttribute('warehouse_id'),
-                        'quantity'     => $shipmentItem->getAttribute('quantity'),
-                    ]);
+                    StockItem::query()->create(array_merge(
+                        [
+                            'warehouse_id' => $shipmentItem->getAttribute('shipment')->getAttribute('warehouse_id'),
+                            'shipment_id'  => $shipmentItem->getAttribute('shipment')->getAttribute('shipment_type')->value === ShipmentType::Outgoing
+                                ? $shipmentItem->getAttribute('shipment')->getAttribute('id')
+                                : null,
+                        ],
+                        $shipmentItem->only(['product_id', 'quantity', 'batch_number', 'barcode', 'expiry_date'])
+                    ));
                 });
 
                 if ($shipment->getAttribute('status')->value !== ShipmentStatus::Created) {
