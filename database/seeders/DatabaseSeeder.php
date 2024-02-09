@@ -11,8 +11,10 @@ use App\Models\Shipment;
 use App\Models\ShipmentItem;
 use App\Models\StockItem;
 use App\Models\Warehouse;
+use Closure;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 class DatabaseSeeder extends Seeder
 {
@@ -44,40 +46,66 @@ class DatabaseSeeder extends Seeder
             $shipments = Shipment::factory(50)->sequence(fn (Sequence $sequence): array => [
                 'contact_id'   => fake()->randomElement($contacts->toArray()),
                 'warehouse_id' => fake()->randomElement($warehouses->toArray()),
-            ])->create()->each(function (Shipment $shipment) use ($products): void {
-                $shipment->shipmentItems()->createMany(
-                    ShipmentItem::factory(rand(0, 5))->state([
-                        'shipment_id' => $shipment->getAttribute('id'),
-                    ])->sequence(fn (Sequence $sequence): array => [
-                        'product_id'  => fake()->randomElement($products->toArray()),
-                    ])->make()->toArray()
-                )->each(function (ShipmentItem $shipmentItem): void {
-                    StockItem::query()->create(array_merge(
-                        [
-                            'warehouse_id' => $shipmentItem->getAttribute('shipment')->getAttribute('warehouse_id'),
-                            'shipment_id'  => $shipmentItem->getAttribute('shipment')->getAttribute('shipment_type')->value === ShipmentType::Outgoing
-                                ? $shipmentItem->getAttribute('shipment')->getAttribute('id')
-                                : null,
-                        ],
-                        $shipmentItem->only(['product_id', 'quantity', 'batch_number', 'barcode', 'expiry_date'])
-                    ));
-                });
+            ])->create()->each($this->createShipmentItem($products));
+        }
+    }
 
-                if ($shipment->getAttribute('status')->value !== ShipmentStatus::Created) {
-                    $shipment->statusHistories()->createMany([
-                        [
-                            'status' => ShipmentStatus::Created,
-                        ],
-                        [
-                            'status' => $shipment->getAttribute('status'),
-                        ],
-                    ]);
-                } else {
-                    $shipment->statusHistories()->create([
-                        'status' => $shipment->getAttribute('status'),
-                    ]);
-                }
-            });
+    /**
+     * @param Collection $products
+     * @return Closure
+     */
+    private function createShipmentItem(Collection $products): Closure
+    {
+        return function (Shipment $shipment) use ($products): void {
+            $shipment->shipmentItems()->createMany(
+                ShipmentItem::factory(rand(0, 5))->state([
+                    'shipment_id' => $shipment->getAttribute('id'),
+                ])->sequence(fn (Sequence $sequence): array => [
+                    'product_id'  => fake()->randomElement($products->toArray()),
+                ])->make()->toArray()
+            )->each($this->createStockItems());
+
+            $this->setShipmentStatus($shipment);
+        };
+    }
+
+    /**
+     * @return Closure
+     */
+    private function createStockItems(): Closure
+    {
+        return function (ShipmentItem $shipmentItem): void {
+            StockItem::query()->create(array_merge(
+                [
+                    'warehouse_id' => $shipmentItem->getAttribute('shipment')->getAttribute('warehouse_id'),
+                    'shipment_id'  => $shipmentItem->getAttribute('shipment')->getAttribute('shipment_type')->value === ShipmentType::Outgoing
+                        ? $shipmentItem->getAttribute('shipment')->getAttribute('id')
+                        : null,
+                ],
+                $shipmentItem->only(['product_id', 'quantity', 'batch_number', 'barcode', 'expiry_date'])
+            ));
+        };
+    }
+
+    /**
+     * @param Shipment $shipment
+     * @return void
+     */
+    private function setShipmentStatus(Shipment $shipment): void
+    {
+        if ($shipment->getAttribute('status')->value !== ShipmentStatus::Created) {
+            $shipment->statusHistories()->createMany([
+                [
+                    'status' => ShipmentStatus::Created,
+                ],
+                [
+                    'status' => $shipment->getAttribute('status'),
+                ],
+            ]);
+        } else {
+            $shipment->statusHistories()->create([
+                'status' => $shipment->getAttribute('status'),
+            ]);
         }
     }
 }
