@@ -85,7 +85,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('stockQuantity.quantity')
                     ->label(__('Stan magazynowy'))
                     ->numeric()
-                    ->state(fn (Product $product) => $product->getAttribute('stockQuantity')->sum('quantity'))
+                    ->state(fn (Product $product) => $product->getAttribute('stockItems')->sum('quantity'))
                     ->default(0),
             ])
             ->filters([
@@ -111,7 +111,7 @@ class ProductResource extends Resource
                 Infolists\Components\TextEntry::make('description')
                     ->label(__('Opis produktu'))
                     ->columnSpanFull(),
-                Infolists\Components\RepeatableEntry::make('stockQuantity')
+                Infolists\Components\RepeatableEntry::make('stockItems')
                     ->label(__('Stany magazynów'))
                     ->default(['empty'])
                     ->schema([

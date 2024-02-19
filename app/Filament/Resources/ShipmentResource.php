@@ -193,9 +193,10 @@ class ShipmentResource extends Resource
                 ->required()
                 ->rules(array_merge(
                     self::rules()['shipmentItems.*.quantity'],
-                    [fn (Get $get) => new OutgoingShipmentItemExceedsStockQuantity(
-                        $get('product_id')
-                    )]
+                    [fn (Get $get): ?OutgoingShipmentItemExceedsStockQuantity => $get('status') === ShipmentStatus::Created
+                        ? new OutgoingShipmentItemExceedsStockQuantity($get('product_id'))
+                        : null
+                    ]
                 ));
         } else {
             $quantityField = Forms\Components\TextInput::make('quantity')

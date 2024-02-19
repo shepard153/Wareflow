@@ -36,21 +36,67 @@ class EditShipment extends EditRecord
         }
 
         if ($this->record->getAttribute('status')->value === ShipmentStatus::Delivered) {
-            if ($this->record->getAttribute('shipment_type')->value === ShipmentType::Incoming) {
-                $this->record->getAttribute('shipmentItems')->each(function (ShipmentItem $shipmentItem): void {
-                    StockItem::query()->create(array_merge(
-                        [
-                            'warehouse_id' => $this->record->getAttribute('warehouse_id'),
-                        ],
-                        $shipmentItem->only(['product_id', 'quantity', 'batch_number', 'barcode', 'expiry_date'])
-                    ));
-                });
-            }
+            match ($this->record->getAttribute('shipment_type')->value) {
+                ShipmentType::Incoming => $this->handleIncomingShipmentDelivered(),
+                ShipmentType::Outgoing => $this->handleOutgoingShipmentDelivered(),
+                default => null,
+            };
+        } elseif ($this->record->getAttribute('status')->value === ShipmentStatus::Canceled) {
+            match ($this->record->getAttribute('shipment_type')->value) {
+                ShipmentType::Incoming => $this->handleIncomingShipmentCancelled(),
+                ShipmentType::Outgoing => $this->handleOutgoingShipmentCancelled(),
+                default => null,
+            };
         }
     }
 
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('view', ['record' => $this->getRecord()]);
+    }
+
+    /**
+     * @return void
+     */
+    private function handleIncomingShipmentDelivered(): void
+    {
+        $this->record->getAttribute('shipmentItems')->each(function (ShipmentItem $shipmentItem): void {
+            StockItem::query()->create(array_merge(
+                [
+                    'warehouse_id' => $this->record->getAttribute('warehouse_id'),
+                ],
+                $shipmentItem->only(['product_id', 'quantity', 'batch_number', 'barcode', 'expiry_date'])
+            ));
+        });
+    }
+
+    /**
+     * @return void
+     */
+    private function handleIncomingShipmentCancelled(): void
+    {
+        $this->record->getAttribute('shipmentItems')->each(function (ShipmentItem $shipmentItem): void {
+            $shipmentItem->forceDelete();
+        });
+    }
+
+    /**
+     * @return void
+     */
+    private function handleOutgoingShipmentDelivered(): void
+    {
+        $this->record->getAttribute('stockItems')->each(function (StockItem $stockItem): void {
+            $stockItem->forceDelete();
+        });
+    }
+
+    /**
+     * @return void
+     */
+    private function handleOutgoingShipmentCancelled(): void
+    {
+        $this->record->getAttribute('stockItems')->each(function (StockItem $stockItem): void {
+            $stockItem->restore();
+        });
     }
 }

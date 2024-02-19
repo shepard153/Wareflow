@@ -88,4 +88,12 @@ class Shipment extends Model
     {
         return $this->hasMany(ShipmentItem::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function stockItems(): HasMany
+    {
+        return $this->hasMany(StockItem::class);
+    }
 }

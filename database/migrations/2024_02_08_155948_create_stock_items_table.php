@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreign('shipment_id')->references('id')->on('shipments')->onDelete('cascade');
             $table->foreign('product_variation_id')->references('id')->on('product_variations')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

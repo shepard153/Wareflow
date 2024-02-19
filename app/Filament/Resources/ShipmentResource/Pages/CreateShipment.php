@@ -27,16 +27,21 @@ class CreateShipment extends CreateRecord
                     ->orderBy('expiry_date')
                     ->orderBy('created_at')
                     ->get()
-                    ->each(function ($stockItem) use (&$quantity): void {
+                    ->each(function (StockItem $stockItem) use (&$quantity): void {
                         if ($quantity > 0) {
                             if ($stockItem->getAttribute('quantity') > $quantity) {
                                 $stockItem->update([
-                                    'quantity' => $stockItem->getAttribute('quantity') - $quantity,
+                                    'shipment_id' => $this->record->getAttribute('id'),
+                                    'quantity'    => $stockItem->getAttribute('quantity') - $quantity,
                                 ]);
 
                                 $quantity = 0;
                             } else {
                                 $quantity -= $stockItem->getAttribute('quantity');
+
+                                $stockItem->update([
+                                    'shipment_id' => $this->record->getAttribute('id')
+                                ]);
 
                                 $stockItem->delete();
                             }
