@@ -7,6 +7,7 @@ use App\Enums\ShipmentType;
 use App\Filament\Resources\ShipmentResource\Pages;
 use App\Http\Requests\ShipmentRequest;
 use App\Models\Shipment;
+use App\Models\ShipmentItem;
 use App\Rules\OutgoingShipmentItemExceedsStockQuantity;
 use Filament\Forms;
 use Filament\Forms\Components\Wizard;
@@ -38,7 +39,12 @@ class ShipmentResource extends Resource
                 Wizard::make([
                     self::shipmentDetailsStep(),
                     self::shipmentItemsStep(),
-                ])->columnSpanFull()->skippable()
+                ])
+                    ->columnSpanFull()
+                    ->skippable()
+                    ->disabled(fn (Shipment $shipment): bool => $shipment->getAttribute('status')->value === ShipmentStatus::Delivered
+                        || $shipment->getAttribute('status')->value === ShipmentStatus::Canceled
+                    )
             ]);
     }
 
@@ -193,7 +199,7 @@ class ShipmentResource extends Resource
                 ->required()
                 ->rules(array_merge(
                     self::rules()['shipmentItems.*.quantity'],
-                    [fn (Get $get): ?OutgoingShipmentItemExceedsStockQuantity => $get('status') === ShipmentStatus::Created
+                    [fn (Get $get, ?ShipmentItem $record): ?OutgoingShipmentItemExceedsStockQuantity => $record === null
                         ? new OutgoingShipmentItemExceedsStockQuantity($get('product_id'))
                         : null
                     ]

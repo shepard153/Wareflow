@@ -85,7 +85,7 @@ class EditShipment extends EditRecord
      */
     private function handleOutgoingShipmentDelivered(): void
     {
-        $this->record->getAttribute('stockItems')->each(function (StockItem $stockItem): void {
+        $this->record->stockItems()->withTrashed()->get()->each(function (StockItem $stockItem): void {
             $stockItem->forceDelete();
         });
     }
@@ -95,8 +95,28 @@ class EditShipment extends EditRecord
      */
     private function handleOutgoingShipmentCancelled(): void
     {
-        $this->record->getAttribute('stockItems')->each(function (StockItem $stockItem): void {
-            $stockItem->restore();
+        $this->record->stockItems()->withTrashed()->get()->each(function (StockItem $stockItem): void {
+            // If item with same batch number, product_id and warehouse_id exists, add quantity to it and remove this (cloned) stock item
+            $existingStockItem = StockItem::query()
+                ->where('product_id', $stockItem->getAttribute('product_id'))
+                ->where('warehouse_id', $stockItem->getAttribute('warehouse_id'))
+                ->where('batch_number', $stockItem->getAttribute('batch_number'))
+                ->first();
+
+            if ($existingStockItem === null) {
+                $stockItem->update([
+                    'shipment_id' => null,
+                    'deleted_at'  => null,
+                ]);
+
+                return;
+            }
+
+            $existingStockItem?->update([
+                'quantity' => $existingStockItem->getAttribute('quantity') + $stockItem->getAttribute('quantity'),
+            ]);
+
+            $stockItem->forceDelete();
         });
     }
 }

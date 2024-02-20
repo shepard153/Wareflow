@@ -13,7 +13,10 @@ class ViewShipment extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            Actions\EditAction::make()
+                ->hidden(fn () => $this->record->getAttribute('status')->value === 'delivered'
+                    || $this->record->getAttribute('status')->value === 'canceled'
+                ),
         ];
     }
 

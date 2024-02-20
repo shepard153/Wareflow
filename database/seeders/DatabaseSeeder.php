@@ -75,15 +75,25 @@ class DatabaseSeeder extends Seeder
     private function createStockItems(): Closure
     {
         return function (ShipmentItem $shipmentItem): void {
-            StockItem::query()->create(array_merge(
-                [
-                    'warehouse_id' => $shipmentItem->getAttribute('shipment')->getAttribute('warehouse_id'),
-                    'shipment_id'  => $shipmentItem->getAttribute('shipment')->getAttribute('shipment_type')->value === ShipmentType::Outgoing
-                        ? $shipmentItem->getAttribute('shipment')->getAttribute('id')
-                        : null,
-                ],
-                $shipmentItem->only(['product_id', 'quantity', 'batch_number', 'barcode', 'expiry_date'])
-            ));
+            if ($this->canCreateShipmentItem($shipmentItem->getAttribute('shipment'))) {
+                $stockItem = StockItem::query()->create(array_merge(
+                    [
+                        'warehouse_id' => $shipmentItem->getAttribute('shipment')->getAttribute('warehouse_id'),
+                        'shipment_id' => $shipmentItem->getAttribute('shipment')->getAttribute('shipment_type')->value === ShipmentType::Outgoing
+                            ? $shipmentItem->getAttribute('shipment')->getAttribute('id')
+                            : null,
+                    ],
+                    $shipmentItem->only(['product_id', 'quantity', 'batch_number', 'barcode', 'expiry_date'])
+                ));
+
+                if ($shipmentItem->getAttribute('shipment')->getAttribute('shipment_type')->value === ShipmentType::Outgoing
+                    && $shipmentItem->getAttribute('shipment')->getAttribute('status')->value === ShipmentStatus::Delivered
+                ) {
+                    $stockItem->forceDelete();
+                } elseif ($shipmentItem->getAttribute('shipment')->getAttribute('shipment_type')->value === ShipmentType::Outgoing) {
+                    $stockItem->delete();
+                }
+            }
         };
     }
 
@@ -107,5 +117,16 @@ class DatabaseSeeder extends Seeder
                 'status' => $shipment->getAttribute('status'),
             ]);
         }
+    }
+
+    /**
+     *
+     */
+    private function canCreateShipmentItem(Shipment $shipment): bool
+    {
+        return $shipment->getAttribute('shipment_type')->value === ShipmentType::Outgoing
+            || ($shipment->getAttribute('shipment_type')->value === ShipmentType::Incoming
+                && $shipment->getAttribute('status')->value === ShipmentStatus::Delivered
+            );
     }
 }

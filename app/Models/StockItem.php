@@ -15,6 +15,7 @@ class StockItem extends Model
     protected $fillable = [
         'warehouse_id',
         'product_id',
+        'shipment_id',
         'quantity',
         'batch_number',
         'barcode',

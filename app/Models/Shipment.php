@@ -39,11 +39,20 @@ class Shipment extends Model
     {
         parent::boot();
 
-        static::creating(function ($shipment) {
+        static::creating(function (Shipment $shipment): void {
             $shipment->reference = match ($shipment->shipment_type->value) {
-                ShipmentType::Incoming          => 'I' . date('Ymd') . '-' . Shipment::query()->count(),
-                ShipmentType::Outgoing          => 'O' . date('Ymd') . '-' . Shipment::query()->count(),
-                ShipmentType::WarehouseTransfer => 'WT' . date('Ymd') . '-' . Shipment::query()->count(),
+                ShipmentType::Incoming          => 'I' . date('Ym') . '-' . Shipment::query()
+                        ->where('shipment_type', ShipmentType::Incoming)
+                        ->where('created_at', '>=', now()->startOfYear())
+                        ->count(),
+                ShipmentType::Outgoing          => 'O' . date('Ym') . '-' . Shipment::query()
+                        ->where('shipment_type', ShipmentType::Outgoing)
+                        ->where('created_at', '>=', now()->startOfYear())
+                        ->count(),
+                ShipmentType::WarehouseTransfer => 'WT' . date('Ym') . '-' . Shipment::query()
+                        ->where('shipment_type', ShipmentType::WarehouseTransfer)
+                        ->where('created_at', '>=', now()->startOfYear())
+                        ->count(),
                 default                         => null,
             };
         });
@@ -94,6 +103,6 @@ class Shipment extends Model
      */
     public function stockItems(): HasMany
     {
-        return $this->hasMany(StockItem::class);
+        return $this->hasMany(StockItem::class, 'shipment_id');
     }
 }
