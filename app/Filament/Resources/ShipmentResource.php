@@ -42,8 +42,8 @@ class ShipmentResource extends Resource
                 ])
                     ->columnSpanFull()
                     ->skippable()
-                    ->disabled(fn (Shipment $shipment): bool => $shipment->getAttribute('status')->value === ShipmentStatus::Delivered
-                        || $shipment->getAttribute('status')->value === ShipmentStatus::Canceled
+                    ->disabled(fn (Shipment $shipment): bool => $shipment->getAttribute('status')?->value === ShipmentStatus::Delivered
+                        || $shipment->getAttribute('status')?->value === ShipmentStatus::Canceled
                     )
             ]);
     }
