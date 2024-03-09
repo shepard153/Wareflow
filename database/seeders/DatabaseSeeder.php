@@ -23,15 +23,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(RolesAndPermissionsSeeder::class);
+
         \App\Models\User::create([
             'name'     => 'Admin',
             'email'    => 'test@example.com',
-            'password' => bcrypt('test'),
-        ]);
-
-        $this->call(RolesAndPermissionsSeeder::class);
+            'password' => 'test',
+        ])->assignRole('admin');
 
         if (! app()->environment('production')) {
+            \App\Models\User::create([
+                'name'     => 'Office',
+                'email'    => 'office@example.com',
+                'password' => 'test',
+            ])->assignRole('office_worker');
+
+            \App\Models\User::create([
+                'name'     => 'Warehouse',
+                'email'    => 'warehouse@example.com',
+                'password' => 'test',
+            ])->assignRole('warehouse_worker');
+
             $this->call([
                 ProductCategorySeeder::class,
                 ProductSeeder::class

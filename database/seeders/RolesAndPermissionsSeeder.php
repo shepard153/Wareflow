@@ -69,8 +69,5 @@ class RolesAndPermissionsSeeder extends Seeder
             'view products',
             'view product categories',
         ]);
-
-        $user = \App\Models\User::find(1);
-        $user->assignRole('admin');
     }
 }
