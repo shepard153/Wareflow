@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     use HasApiTokens;
     use HasFactory;
+    use HasRoles;
     use Notifiable;
 
     /**
@@ -43,6 +45,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password'          => 'hashed'
     ];
 
     public function canAccessPanel(Panel $panel): bool
@@ -52,6 +55,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->getAttribute('avatar_url');
+        return 'storage/' . $this->getAttribute('avatar_url');
+    }
+
+    public function getRoleAttribute(): ?string
+    {
+        return $this->roles()->first()?->getAttribute('name');
     }
 }

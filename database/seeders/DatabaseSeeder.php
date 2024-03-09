@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('test'),
         ]);
 
+        $this->call(RolesAndPermissionsSeeder::class);
+
         if (! app()->environment('production')) {
             $this->call([
                 ProductCategorySeeder::class,

@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\WarehouseResource\Pages;
-use App\Filament\Resources\WarehouseResource\RelationManagers;
 use App\Models\Warehouse;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class WarehouseResource extends Resource
 {
@@ -20,6 +17,7 @@ class WarehouseResource extends Resource
     protected static ?string $modelLabel = 'Magazyn';
     protected static ?string $pluralModelLabel = 'Magazyny';
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {

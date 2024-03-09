@@ -13,7 +13,6 @@ use Filament\Forms;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
@@ -26,6 +25,7 @@ class ShipmentResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     protected static ?string $modelLabel = 'Dostawa';
     protected static ?string $pluralModelLabel = 'Dostawy';
+    protected static ?int $navigationSort = 4;
 
     public static function rules(): array
     {
